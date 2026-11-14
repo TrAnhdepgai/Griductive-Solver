@@ -1,0 +1,312 @@
+{
+  "id": "4x4_easy_03",
+  "size": 4,
+  "difficulty": "easy",
+  "cells": [
+    {
+      "id": "A1",
+      "row": 1,
+      "col": "A",
+      "name": "Abel",
+      "profession": "Astronaut"
+    },
+    {
+      "id": "B1",
+      "row": 1,
+      "col": "B",
+      "name": "Grant",
+      "profession": "Guard"
+    },
+    {
+      "id": "C1",
+      "row": 1,
+      "col": "C",
+      "name": "Mara",
+      "profession": "Guard"
+    },
+    {
+      "id": "D1",
+      "row": 1,
+      "col": "D",
+      "name": "Victor",
+      "profession": "Guard"
+    },
+    {
+      "id": "A2",
+      "row": 2,
+      "col": "A",
+      "name": "Bea",
+      "profession": "Guard"
+    },
+    {
+      "id": "B2",
+      "row": 2,
+      "col": "B",
+      "name": "Hannah",
+      "profession": "Farmer"
+    },
+    {
+      "id": "C2",
+      "row": 2,
+      "col": "C",
+      "name": "Owen",
+      "profession": "Clerk"
+    },
+    {
+      "id": "D2",
+      "row": 2,
+      "col": "D",
+      "name": "Wendy",
+      "profession": "Cook"
+    },
+    {
+      "id": "A3",
+      "row": 3,
+      "col": "A",
+      "name": "Derek",
+      "profession": "Guard"
+    },
+    {
+      "id": "B3",
+      "row": 3,
+      "col": "B",
+      "name": "Ivy",
+      "profession": "Painter"
+    },
+    {
+      "id": "C3",
+      "row": 3,
+      "col": "C",
+      "name": "Quilla",
+      "profession": "Painter"
+    },
+    {
+      "id": "D3",
+      "row": 3,
+      "col": "D",
+      "name": "Xavier",
+      "profession": "Clerk"
+    },
+    {
+      "id": "A4",
+      "row": 4,
+      "col": "A",
+      "name": "Franz",
+      "profession": "Clerk"
+    },
+    {
+      "id": "B4",
+      "row": 4,
+      "col": "B",
+      "name": "Karl",
+      "profession": "Cook"
+    },
+    {
+      "id": "C4",
+      "row": 4,
+      "col": "C",
+      "name": "Uma",
+      "profession": "Guard"
+    },
+    {
+      "id": "D4",
+      "row": 4,
+      "col": "D",
+      "name": "Yara",
+      "profession": "Farmer"
+    }
+  ],
+  "solution": {
+    "A1": "INNOCENT",
+    "B1": "CRIMINAL",
+    "C1": "CRIMINAL",
+    "D1": "INNOCENT",
+    "A2": "CRIMINAL",
+    "B2": "INNOCENT",
+    "C2": "INNOCENT",
+    "D2": "CRIMINAL",
+    "A3": "INNOCENT",
+    "B3": "CRIMINAL",
+    "C3": "INNOCENT",
+    "D3": "INNOCENT",
+    "A4": "CRIMINAL",
+    "B4": "CRIMINAL",
+    "C4": "INNOCENT",
+    "D4": "CRIMINAL"
+  },
+  "initial_revealed": [
+    "C3",
+    "C4"
+  ],
+  "clues": {
+    "A1": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "A1",
+          "A2",
+          "D4"
+        ]
+      },
+      "k": 2
+    },
+    "B1": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "column",
+        "col": "B"
+      },
+      "k": 3
+    },
+    "C1": {
+      "type": "FACT",
+      "cell": "A1",
+      "status": "INNOCENT"
+    },
+    "D1": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "neighbors",
+        "of": "D1"
+      },
+      "k": 2
+    },
+    "A2": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "B1",
+          "B2",
+          "A3",
+          "D3"
+        ]
+      },
+      "k": 1
+    },
+    "B2": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "column",
+        "col": "A"
+      },
+      "k": 2
+    },
+    "C2": {
+      "type": "FACT",
+      "cell": "A2",
+      "status": "CRIMINAL"
+    },
+    "D2": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "A1",
+          "D1",
+          "A2"
+        ]
+      },
+      "k": 1
+    },
+    "A3": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "neighbors",
+        "of": "B2"
+      },
+      "k": 4
+    },
+    "B3": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "A2",
+          "D3",
+          "A4"
+        ]
+      },
+      "k": 2
+    },
+    "C3": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "B1",
+          "C1",
+          "D2"
+        ]
+      },
+      "k": 3
+    },
+    "D3": {
+      "type": "AT_LEAST",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "C1",
+          "B3",
+          "C4"
+        ]
+      },
+      "k": 2
+    },
+    "A4": {
+      "type": "SAME",
+      "a": "A2",
+      "b": "D2"
+    },
+    "B4": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "neighbors",
+        "of": "B2"
+      },
+      "k": 4
+    },
+    "C4": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "D1",
+          "B2",
+          "D3"
+        ]
+      },
+      "k": 0
+    },
+    "D4": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "row",
+        "row": 4
+      },
+      "k": 3
+    }
+  },
+  "meta": {
+    "seed": 42,
+    "reveal_order": [
+      "B1",
+      "C1",
+      "A1",
+      "D1",
+      "A2",
+      "B2",
+      "C2",
+      "D2",
+      "A3",
+      "B3",
+      "D3",
+      "A4",
+      "B4",
+      "D4"
+    ],
+    "extensions": [],
+    "attempt": 0
+  }
+}
