@@ -1,0 +1,152 @@
+{
+  "puzzle_id": "sample_3x3_02",
+  "grid_size": 3,
+  "initial_revealed": [
+    "A1",
+    "B1"
+  ],
+  "characters": [
+    {
+      "name": "Arthur",
+      "cell": "A1",
+      "profession": "Artist",
+      "hidden_status": "INNOCENT",
+      "clue": {
+        "clue_id": "c_A1",
+        "clue_type": "AT_MOST",
+        "k": 1,
+        "region": {
+          "region_type": "ROW",
+          "row": 1
+        },
+        "target_status": "CRIMINAL",
+        "text": "At most 1 Criminal in row 1."
+      }
+    },
+    {
+      "name": "Bella",
+      "cell": "B1",
+      "profession": "Biologist",
+      "hidden_status": "CRIMINAL",
+      "clue": {
+        "clue_id": "c_B1",
+        "clue_type": "EXACTLY",
+        "k": 2,
+        "region": {
+          "region_type": "COL",
+          "col": "B"
+        },
+        "target_status": "CRIMINAL",
+        "text": "Exactly 2 Criminals in column B."
+      }
+    },
+    {
+      "name": "Chloe",
+      "cell": "C1",
+      "profession": "Chef",
+      "hidden_status": "INNOCENT",
+      "clue": {
+        "clue_id": "c_C1",
+        "clue_type": "SAME",
+        "person": "A1",
+        "person2": "C1",
+        "text": "Arthur and Chloe have the same status."
+      }
+    },
+    {
+      "name": "David",
+      "cell": "A2",
+      "profession": "Dentist",
+      "hidden_status": "CRIMINAL",
+      "clue": {
+        "clue_id": "c_A2",
+        "clue_type": "DIFFERENT",
+        "person": "A2",
+        "person2": "B2",
+        "text": "David and Emma have different statuses."
+      }
+    },
+    {
+      "name": "Emma",
+      "cell": "B2",
+      "profession": "Editor",
+      "hidden_status": "INNOCENT",
+      "clue": {
+        "clue_id": "c_B2",
+        "clue_type": "EXACTLY",
+        "k": 4,
+        "region": {
+          "region_type": "NEIGHBORS",
+          "cell": "B2"
+        },
+        "target_status": "CRIMINAL",
+        "text": "Exactly 4 neighbors of Emma are Criminals."
+      }
+    },
+    {
+      "name": "Felix",
+      "cell": "C2",
+      "profession": "Florist",
+      "hidden_status": "CRIMINAL",
+      "clue": {
+        "clue_id": "c_C2",
+        "clue_type": "SAME",
+        "person": "A2",
+        "person2": "C2",
+        "text": "David and Felix have the same status."
+      }
+    },
+    {
+      "name": "Grace",
+      "cell": "A3",
+      "profession": "Geologist",
+      "hidden_status": "INNOCENT",
+      "clue": {
+        "clue_id": "c_A3",
+        "clue_type": "EXACTLY",
+        "k": 0,
+        "region": {
+          "region_type": "EXPLICIT",
+          "cells": [
+            "A1",
+            "A3",
+            "C1",
+            "C3"
+          ]
+        },
+        "target_status": "CRIMINAL",
+        "text": "No Criminals among the 4 corners."
+      }
+    },
+    {
+      "name": "Hugo",
+      "cell": "B3",
+      "profession": "Historian",
+      "hidden_status": "CRIMINAL",
+      "clue": {
+        "clue_id": "c_B3",
+        "clue_type": "AT_LEAST",
+        "k": 1,
+        "region": {
+          "region_type": "ROW",
+          "row": 3
+        },
+        "target_status": "CRIMINAL",
+        "text": "At least 1 Criminal in row 3."
+      }
+    },
+    {
+      "name": "Iris",
+      "cell": "C3",
+      "profession": "Illustrator",
+      "hidden_status": "INNOCENT",
+      "clue": {
+        "clue_id": "c_C3",
+        "clue_type": "SAME",
+        "person": "A3",
+        "person2": "C3",
+        "text": "Grace and Iris have the same status."
+      }
+    }
+  ]
+}
