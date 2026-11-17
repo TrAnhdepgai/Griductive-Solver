@@ -138,7 +138,7 @@ class TestCrossCheckBruteForce(unittest.TestCase):
         reg = RegionSpec.explicit_region(["A1", "B1", "C1", "A2"])
         for k in range(0, 5):
             clue = Clue.at_least(f"al_{k}", k, reg)
-            self._verify_clue_equivalence(clue, chars, grid_size=2)
+            self._verify_clue_equivalence(clue, chars, grid_size=3)
 
     def test_at_most_equivalence_all_k(self):
         chars = [
@@ -150,7 +150,7 @@ class TestCrossCheckBruteForce(unittest.TestCase):
         reg = RegionSpec.explicit_region(["A1", "B1", "C1", "A2"])
         for k in range(0, 5):
             clue = Clue.at_most(f"am_{k}", k, reg)
-            self._verify_clue_equivalence(clue, chars, grid_size=2)
+            self._verify_clue_equivalence(clue, chars, grid_size=3)
 
     # -------------------------------------------------------------------------
     # Extensions Equivalence

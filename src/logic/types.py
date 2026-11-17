@@ -1,7 +1,9 @@
 """Type definitions, enumerations, and constants for Griductive Solver."""
 
 from enum import Enum
-from typing import Literal
+from typing import Literal, Union
+
+COLS = "ABCDE"
 
 
 class Status(str, Enum):
@@ -38,6 +40,7 @@ class ClueType(str, Enum):
 
     # Extensions (Section 3.2 & 4.2)
     PARITY = "PARITY"
+    COMPARE = "COMPARE"
     COUNT_COMPARE = "COUNT_COMPARE"
     ALL_SAME = "ALL_SAME"
 
@@ -96,8 +99,31 @@ class CompareOp(str, Enum):
             return left <= right
         raise ValueError(f"Unknown compare operator: {self}")
 
+    @classmethod
+    def from_str(cls, s: str) -> "CompareOp":
+        for op in cls:
+            if op.value == s:
+                return op
+        raise ValueError(f"Unknown CompareOp string: {s}")
 
-class ParityType(int, Enum):
+
+class ParityType(str, Enum):
     """Parity values for parity extension."""
-    EVEN = 0
-    ODD = 1
+    EVEN = "EVEN"
+    ODD = "ODD"
+
+    def to_int(self) -> int:
+        return 0 if self == ParityType.EVEN else 1
+
+    @classmethod
+    def from_val(cls, val: Union[int, str, "ParityType"]) -> "ParityType":
+        if isinstance(val, ParityType):
+            return val
+        if isinstance(val, int):
+            return cls.EVEN if val % 2 == 0 else cls.ODD
+        s = str(val).strip().upper()
+        if s in ("EVEN", "0"):
+            return cls.EVEN
+        if s in ("ODD", "1"):
+            return cls.ODD
+        raise ValueError(f"Unknown parity value: {val}")
