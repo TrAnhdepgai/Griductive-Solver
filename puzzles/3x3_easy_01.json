@@ -1,0 +1,182 @@
+{
+  "id": "3x3_easy_01",
+  "size": 3,
+  "difficulty": "easy",
+  "cells": [
+    {
+      "id": "A1",
+      "row": 1,
+      "col": "A",
+      "name": "Derek",
+      "profession": "Clerk"
+    },
+    {
+      "id": "B1",
+      "row": 1,
+      "col": "B",
+      "name": "Owen",
+      "profession": "Painter"
+    },
+    {
+      "id": "C1",
+      "row": 1,
+      "col": "C",
+      "name": "Tom",
+      "profession": "Astronaut"
+    },
+    {
+      "id": "A2",
+      "row": 2,
+      "col": "A",
+      "name": "Leo",
+      "profession": "Painter"
+    },
+    {
+      "id": "B2",
+      "row": 2,
+      "col": "B",
+      "name": "Priya",
+      "profession": "Clerk"
+    },
+    {
+      "id": "C2",
+      "row": 2,
+      "col": "C",
+      "name": "Victor",
+      "profession": "Detective"
+    },
+    {
+      "id": "A3",
+      "row": 3,
+      "col": "A",
+      "name": "Mara",
+      "profession": "Astronaut"
+    },
+    {
+      "id": "B3",
+      "row": 3,
+      "col": "B",
+      "name": "Quilla",
+      "profession": "Painter"
+    },
+    {
+      "id": "C3",
+      "row": 3,
+      "col": "C",
+      "name": "Xavier",
+      "profession": "Cook"
+    }
+  ],
+  "solution": {
+    "A1": "INNOCENT",
+    "B1": "CRIMINAL",
+    "C1": "CRIMINAL",
+    "A2": "CRIMINAL",
+    "B2": "INNOCENT",
+    "C2": "INNOCENT",
+    "A3": "INNOCENT",
+    "B3": "CRIMINAL",
+    "C3": "CRIMINAL"
+  },
+  "initial_revealed": [
+    "A3"
+  ],
+  "clues": {
+    "A1": {
+      "type": "FACT",
+      "cell": "A3",
+      "status": "INNOCENT"
+    },
+    "B1": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "A2",
+          "C2"
+        ]
+      },
+      "k": 1
+    },
+    "C1": {
+      "type": "AT_MOST",
+      "region": {
+        "kind": "neighbors",
+        "of": "C1"
+      },
+      "k": 2
+    },
+    "A2": {
+      "type": "AT_MOST",
+      "region": {
+        "kind": "row",
+        "row": 3
+      },
+      "k": 2
+    },
+    "B2": {
+      "type": "FACT",
+      "cell": "C3",
+      "status": "CRIMINAL"
+    },
+    "C2": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "neighbors",
+        "of": "C3"
+      },
+      "k": 1
+    },
+    "A3": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "row",
+        "row": 3
+      },
+      "k": 2
+    },
+    "B3": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "A1",
+          "A2",
+          "B2",
+          "C2",
+          "C3"
+        ]
+      },
+      "k": 2
+    },
+    "C3": {
+      "type": "AT_LEAST",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "B1",
+          "C1",
+          "A2",
+          "A3",
+          "C3"
+        ]
+      },
+      "k": 4
+    }
+  },
+  "meta": {
+    "seed": 1,
+    "reveal_order": [
+      "B3",
+      "C3",
+      "A1",
+      "B1",
+      "C1",
+      "A2",
+      "B2",
+      "C2"
+    ],
+    "extensions": [],
+    "attempt": 0
+  }
+}
