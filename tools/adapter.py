@@ -14,7 +14,7 @@ import sys
 import time
 from pathlib import Path
 
-SOURCE_ROOT = Path(__file__).resolve().parent.parent   # Source/  (so `import engine`, `import agent` ... work)
+SOURCE_ROOT = Path(__file__).resolve().parent.parent
 if str(SOURCE_ROOT) not in sys.path:
     sys.path.insert(0, str(SOURCE_ROOT))
 
@@ -62,13 +62,16 @@ def run_team(path: str) -> dict:
 
 
 def team_evaluate(clue: dict, assignment: dict, n: int) -> bool:
-    """TODO(A): call the team's direct semantic evaluator.
+    """Member A's direct semantic evaluator.
     `assignment` maps cell id -> True (criminal) / False (innocent) for ALL cells."""
-    raise NotImplementedError("Edit team_evaluate() in tools/adapter.py.")
+    from src.logic.evaluator import evaluate_clue
+    return evaluate_clue(clue, assignment, n)
 
 
 def team_encode(clue: dict, n: int) -> list[list[int]]:
-    """TODO(A): return the CNF clauses (DIMACS ints) for ONE clue.
-    Primary variables must be 1..n*n in row-major order (see schema.py);
-    auxiliary variables, if any, must be > n*n."""
-    raise NotImplementedError("Edit team_encode() in tools/adapter.py.")
+    """Member A's CNF encoder.
+    Returns the CNF clauses (DIMACS ints) for ONE clue.
+    Primary variables are 1..n*n in row-major order;
+    auxiliary variables, if any, are > n*n."""
+    from src.logic.encoder import encode_clue
+    return encode_clue(clue, n)

@@ -1,0 +1,151 @@
+{
+  "puzzle_id": "sample_3x3_01",
+  "grid_size": 3,
+  "initial_revealed": [
+    "A1",
+    "B1"
+  ],
+  "characters": [
+    {
+      "name": "Abel",
+      "cell": "A1",
+      "profession": "Astronaut",
+      "hidden_status": "CRIMINAL",
+      "clue": {
+        "clue_id": "clue_A1",
+        "clue_type": "EXACTLY",
+        "k": 2,
+        "region": {
+          "region_type": "ROW",
+          "row": 1
+        },
+        "target_status": "CRIMINAL",
+        "text": "Exactly 2 people in row 1 are Criminals."
+      }
+    },
+    {
+      "name": "Bea",
+      "cell": "B1",
+      "profession": "Baker",
+      "hidden_status": "INNOCENT",
+      "clue": {
+        "clue_id": "clue_B1",
+        "clue_type": "SAME",
+        "person": "A1",
+        "person2": "C1",
+        "text": "Abel and Charlie have the same status."
+      }
+    },
+    {
+      "name": "Charlie",
+      "cell": "C1",
+      "profession": "Clerk",
+      "hidden_status": "CRIMINAL",
+      "clue": {
+        "clue_id": "clue_C1",
+        "clue_type": "SAME",
+        "person": "C1",
+        "person2": "C3",
+        "text": "Charlie and Ian have the same status."
+      }
+    },
+    {
+      "name": "Diana",
+      "cell": "A2",
+      "profession": "Doctor",
+      "hidden_status": "INNOCENT",
+      "clue": {
+        "clue_id": "clue_A2",
+        "clue_type": "AT_LEAST",
+        "k": 2,
+        "region": {
+          "region_type": "COL",
+          "col": "A"
+        },
+        "target_status": "CRIMINAL",
+        "text": "At least 2 people in column A are Criminals."
+      }
+    },
+    {
+      "name": "Evan",
+      "cell": "B2",
+      "profession": "Engineer",
+      "hidden_status": "CRIMINAL",
+      "clue": {
+        "clue_id": "clue_B2",
+        "clue_type": "EXACTLY",
+        "k": 4,
+        "region": {
+          "region_type": "NEIGHBORS",
+          "cell": "B2"
+        },
+        "target_status": "CRIMINAL",
+        "text": "Exactly 4 neighbors of Evan are Criminals."
+      }
+    },
+    {
+      "name": "Fiona",
+      "cell": "C2",
+      "profession": "Farmer",
+      "hidden_status": "INNOCENT",
+      "clue": {
+        "clue_id": "clue_C2",
+        "clue_type": "DIFFERENT",
+        "person": "B2",
+        "person2": "C2",
+        "text": "Evan and Fiona have different statuses."
+      }
+    },
+    {
+      "name": "George",
+      "cell": "A3",
+      "profession": "Guard",
+      "hidden_status": "CRIMINAL",
+      "clue": {
+        "clue_id": "clue_A3",
+        "clue_type": "EXACTLY",
+        "k": 2,
+        "region": {
+          "region_type": "ROW",
+          "row": 3
+        },
+        "target_status": "CRIMINAL",
+        "text": "Exactly 2 people in row 3 are Criminals."
+      }
+    },
+    {
+      "name": "Hannah",
+      "cell": "B3",
+      "profession": "Hunter",
+      "hidden_status": "INNOCENT",
+      "clue": {
+        "clue_id": "clue_B3",
+        "clue_type": "EXACTLY",
+        "k": 1,
+        "region": {
+          "region_type": "COL",
+          "col": "B"
+        },
+        "target_status": "CRIMINAL",
+        "text": "Exactly 1 person in column B is Criminal."
+      }
+    },
+    {
+      "name": "Ian",
+      "cell": "C3",
+      "profession": "Inspector",
+      "hidden_status": "CRIMINAL",
+      "clue": {
+        "clue_id": "clue_C3",
+        "clue_type": "AT_MOST",
+        "k": 2,
+        "region": {
+          "region_type": "COL",
+          "col": "C"
+        },
+        "target_status": "CRIMINAL",
+        "text": "At most 2 people in column C are Criminals."
+      }
+    }
+  ]
+}
