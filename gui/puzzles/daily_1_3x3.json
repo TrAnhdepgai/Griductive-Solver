@@ -1,0 +1,123 @@
+{
+ "size": 3,
+ "characters": {
+  "A1": {
+   "name": "Dâu",
+   "job": "Thủ thư"
+  },
+  "B1": {
+   "name": "Gấu",
+   "job": "Nông dân"
+  },
+  "C1": {
+   "name": "Heo",
+   "job": "Thợ mộc"
+  },
+  "A2": {
+   "name": "Khoai",
+   "job": "Họa sĩ"
+  },
+  "B2": {
+   "name": "Nấm",
+   "job": "Tài xế"
+  },
+  "C2": {
+   "name": "Ổi",
+   "job": "Tài xế"
+  },
+  "A3": {
+   "name": "Sen",
+   "job": "Thợ may"
+  },
+  "B3": {
+   "name": "Tôm",
+   "job": "Họa sĩ"
+  },
+  "C3": {
+   "name": "Vải",
+   "job": "Đầu bếp"
+  }
+ },
+ "solution": {
+  "A1": "CRIMINAL",
+  "B1": "INNOCENT",
+  "C1": "INNOCENT",
+  "A2": "INNOCENT",
+  "B2": "INNOCENT",
+  "C2": "INNOCENT",
+  "A3": "INNOCENT",
+  "B3": "INNOCENT",
+  "C3": "CRIMINAL"
+ },
+ "initial_revealed": [
+  "A2",
+  "C1",
+  "B1"
+ ],
+ "clues": {
+  "A1": {
+   "type": "DIFFERENT",
+   "a": "A1",
+   "b": "C2"
+  },
+  "B1": {
+   "type": "PARITY",
+   "parity": "ODD",
+   "region": {
+    "kind": "NEIGHBORS",
+    "cell": "A2"
+   }
+  },
+  "C1": {
+   "type": "AT_MOST",
+   "k": 0,
+   "region": {
+    "kind": "ROW",
+    "index": 2
+   }
+  },
+  "A2": {
+   "type": "SAME",
+   "a": "C2",
+   "b": "A3"
+  },
+  "B2": {
+   "type": "SAME",
+   "a": "B2",
+   "b": "B3"
+  },
+  "C2": {
+   "type": "PARITY",
+   "parity": "ODD",
+   "region": {
+    "kind": "NEIGHBORS",
+    "cell": "B1"
+   }
+  },
+  "A3": {
+   "type": "AT_LEAST",
+   "k": 1,
+   "region": {
+    "kind": "NEIGHBORS",
+    "cell": "C2"
+   }
+  },
+  "B3": {
+   "type": "EXACTLY",
+   "k": 0,
+   "region": {
+    "kind": "NEIGHBORS",
+    "cell": "C1"
+   }
+  },
+  "C3": {
+   "type": "AT_MOST",
+   "k": 2,
+   "region": {
+    "kind": "NEIGHBORS",
+    "cell": "B2"
+   }
+  }
+ },
+ "name": "daily_1_3x3"
+}

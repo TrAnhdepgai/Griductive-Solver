@@ -1,0 +1,113 @@
+{
+ "size": 3,
+ "characters": {
+  "A1": {
+   "name": "Bông",
+   "job": "Ca sĩ"
+  },
+  "B1": {
+   "name": "Cải",
+   "job": "Y tá"
+  },
+  "C1": {
+   "name": "Dâu",
+   "job": "Thợ mộc"
+  },
+  "A2": {
+   "name": "Khoai",
+   "job": "Tài xế"
+  },
+  "B2": {
+   "name": "Lúa",
+   "job": "Ca sĩ"
+  },
+  "C2": {
+   "name": "Mít",
+   "job": "Tài xế"
+  },
+  "A3": {
+   "name": "Ổi",
+   "job": "Thợ may"
+  },
+  "B3": {
+   "name": "Quýt",
+   "job": "Bác sĩ"
+  },
+  "C3": {
+   "name": "Sen",
+   "job": "Y tá"
+  }
+ },
+ "solution": {
+  "A1": "CRIMINAL",
+  "B1": "INNOCENT",
+  "C1": "CRIMINAL",
+  "A2": "INNOCENT",
+  "B2": "INNOCENT",
+  "C2": "INNOCENT",
+  "A3": "INNOCENT",
+  "B3": "INNOCENT",
+  "C3": "CRIMINAL"
+ },
+ "initial_revealed": [
+  "C1",
+  "B1"
+ ],
+ "clues": {
+  "A1": {
+   "type": "SAME",
+   "a": "B1",
+   "b": "B3"
+  },
+  "B1": {
+   "type": "DIFFERENT",
+   "a": "C1",
+   "b": "A2"
+  },
+  "C1": {
+   "type": "DIFFERENT",
+   "a": "A2",
+   "b": "C3"
+  },
+  "A2": {
+   "type": "SAME",
+   "a": "B1",
+   "b": "A3"
+  },
+  "B2": {
+   "type": "PARITY",
+   "parity": "EVEN",
+   "region": {
+    "kind": "NEIGHBORS",
+    "cell": "A1"
+   }
+  },
+  "C2": {
+   "type": "PARITY",
+   "parity": "ODD",
+   "region": {
+    "kind": "NEIGHBORS",
+    "cell": "B3"
+   }
+  },
+  "A3": {
+   "type": "DIFFERENT",
+   "a": "A1",
+   "b": "A2"
+  },
+  "B3": {
+   "type": "EXACTLY",
+   "k": 0,
+   "region": {
+    "kind": "NEIGHBORS",
+    "cell": "C1"
+   }
+  },
+  "C3": {
+   "type": "SAME",
+   "a": "B1",
+   "b": "C2"
+  }
+ },
+ "name": "daily_3_3x3"
+}

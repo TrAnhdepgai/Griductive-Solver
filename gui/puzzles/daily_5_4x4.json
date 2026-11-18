@@ -1,0 +1,190 @@
+{
+ "size": 4,
+ "characters": {
+  "A1": {
+   "name": "An",
+   "job": "Tài xế"
+  },
+  "B1": {
+   "name": "Bông",
+   "job": "Nhà báo"
+  },
+  "C1": {
+   "name": "Cải",
+   "job": "Thủ thư"
+  },
+  "D1": {
+   "name": "Dâu",
+   "job": "Y tá"
+  },
+  "A2": {
+   "name": "Đậu",
+   "job": "Bác sĩ"
+  },
+  "B2": {
+   "name": "Gấu",
+   "job": "Y tá"
+  },
+  "C2": {
+   "name": "Heo",
+   "job": "Nhà báo"
+  },
+  "D2": {
+   "name": "Khoai",
+   "job": "Ca sĩ"
+  },
+  "A3": {
+   "name": "Lúa",
+   "job": "Thợ may"
+  },
+  "B3": {
+   "name": "Mít",
+   "job": "Tài xế"
+  },
+  "C3": {
+   "name": "Nấm",
+   "job": "Bác sĩ"
+  },
+  "D3": {
+   "name": "Ổi",
+   "job": "Thợ may"
+  },
+  "A4": {
+   "name": "Quýt",
+   "job": "Nông dân"
+  },
+  "B4": {
+   "name": "Sen",
+   "job": "Ca sĩ"
+  },
+  "C4": {
+   "name": "Tôm",
+   "job": "Nhà báo"
+  },
+  "D4": {
+   "name": "Vải",
+   "job": "Đầu bếp"
+  }
+ },
+ "solution": {
+  "A1": "CRIMINAL",
+  "B1": "INNOCENT",
+  "C1": "INNOCENT",
+  "D1": "CRIMINAL",
+  "A2": "CRIMINAL",
+  "B2": "CRIMINAL",
+  "C2": "INNOCENT",
+  "D2": "INNOCENT",
+  "A3": "INNOCENT",
+  "B3": "INNOCENT",
+  "C3": "CRIMINAL",
+  "D3": "CRIMINAL",
+  "A4": "INNOCENT",
+  "B4": "CRIMINAL",
+  "C4": "INNOCENT",
+  "D4": "INNOCENT"
+ },
+ "initial_revealed": [
+  "A1",
+  "D1",
+  "B4"
+ ],
+ "clues": {
+  "A1": {
+   "type": "AT_MOST",
+   "k": 0,
+   "region": {
+    "kind": "NEIGHBORS",
+    "cell": "D1"
+   }
+  },
+  "B1": {
+   "type": "SAME",
+   "a": "A4",
+   "b": "C4"
+  },
+  "C1": {
+   "type": "SAME",
+   "a": "B1",
+   "b": "A4"
+  },
+  "D1": {
+   "type": "DIFFERENT",
+   "a": "D1",
+   "b": "A3"
+  },
+  "A2": {
+   "type": "DIFFERENT",
+   "a": "B3",
+   "b": "D3"
+  },
+  "B2": {
+   "type": "AT_LEAST",
+   "k": 2,
+   "region": {
+    "kind": "NEIGHBORS",
+    "cell": "A1"
+   }
+  },
+  "C2": {
+   "type": "SAME",
+   "a": "A3",
+   "b": "A4"
+  },
+  "D2": {
+   "type": "SAME",
+   "a": "A4",
+   "b": "D4"
+  },
+  "A3": {
+   "type": "DIFFERENT",
+   "a": "C2",
+   "b": "B4"
+  },
+  "B3": {
+   "type": "AT_LEAST",
+   "k": 2,
+   "region": {
+    "kind": "ROW",
+    "index": 3
+   }
+  },
+  "C3": {
+   "type": "DIFFERENT",
+   "a": "D1",
+   "b": "C4"
+  },
+  "D3": {
+   "type": "DIFFERENT",
+   "a": "A1",
+   "b": "A3"
+  },
+  "A4": {
+   "type": "AT_LEAST",
+   "k": 4,
+   "region": {
+    "kind": "NEIGHBORS",
+    "cell": "C2"
+   }
+  },
+  "B4": {
+   "type": "DIFFERENT",
+   "a": "D2",
+   "b": "B4"
+  },
+  "C4": {
+   "type": "SAME",
+   "a": "C1",
+   "b": "B3"
+  },
+  "D4": {
+   "type": "AT_LEAST",
+   "k": 3,
+   "region": {
+    "kind": "NEIGHBORS",
+    "cell": "B1"
+   }
+  }
+ },
+ "name": "daily_5_4x4"
+}
