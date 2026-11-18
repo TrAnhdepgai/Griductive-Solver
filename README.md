@@ -132,7 +132,6 @@ assignment = {"A1": False, "B1": True, "C1": True, "A2": True, ...}
 is_valid = evaluate_clue(puzzle.clues["B1"], assignment, n=3)
 ```
 
-
 ---
 
 ## 🎯 Bộ 6 Test Cases Chính Thức (Official Benchmark Set)

@@ -141,7 +141,6 @@ Theo quy định báo cáo của môn học:
   - *"Dẫn xuất công thức CNF tối ưu cho phép toán so sánh count(R1) op count(R2) với op thuộc [<, ==, >] sử dụng auxiliary indicator variables sao cho DPLL solver giải nhanh và tránh bùng nổ mệnh đề."*
   - *"Viết script kiểm tra chéo exhaustive brute-force so sánh chân trị ngữ nghĩa của Clue với tính khả thỏa của công thức CNF sau khi gán biến sơ cấp."*
 
-
 ---
 
 ## 6. Tài liệu tham khảo (References)
