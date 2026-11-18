@@ -37,28 +37,28 @@ def run_reference(path: str) -> dict:
     return out
 
 
-def run_team(path: str) -> dict:
-    """TODO(D + B): run the team's full pipeline on one puzzle file and return METRIC_KEYS.
+def run_team(path: str, heuristic: str = "first", strategy: str = "pruned") -> dict:
+    """Member B's DPLL logic agent on one puzzle file.
 
-    Sketch (rename to match the real modules):
-
-        from engine import GameEngine            # member C
-        from agent import LogicAgent             # member B
-        engine = GameEngine.load(path)
-        agent = LogicAgent(engine)               # agent only gets public state
-        t0 = time.perf_counter()
-        result = agent.run()                     # runs until solved / stuck / inconsistent
-        dt = time.perf_counter() - t0
-        cnf, sat = agent.cnf_stats, agent.sat_stats
-        return {
-            "primary_vars": cnf.primary_vars, "aux_vars": cnf.aux_vars, "clauses": cnf.clauses,
-            "sat_calls": sat.calls, "decisions": sat.decisions,
-            "propagations": sat.propagations, "backtracks": sat.backtracks,
-            "steps": len(result.trace), "waves": result.waves,
-            "runtime_s": dt, "solved": engine.is_solved(),
-        }
+    The engine judges each verdict with its own solver calls; only the agent's
+    SAT calls are counted. CNF sizes are those of the largest KB_t of the run.
+    Swap LocalGameEngine for member C's engine once it implements
+    src.agent.GameEngineProtocol (public_state / submit_verdict).
     """
-    raise NotImplementedError("Edit run_team() in tools/adapter.py to call the team's agent.")
+    from src.agent import LocalGameEngine, LogicAgent
+    engine = LocalGameEngine.load(path)
+    agent = LogicAgent(engine, heuristic=heuristic, strategy=strategy)   # public state only
+    t0 = time.perf_counter()
+    result = agent.run()
+    dt = time.perf_counter() - t0
+    cnf, sat = result.max_kb_stats, result.sat_stats
+    return {
+        "primary_vars": cnf["primary_vars"], "aux_vars": cnf["aux_vars"], "clauses": cnf["clauses"],
+        "sat_calls": sat.calls, "decisions": sat.decisions,
+        "propagations": sat.propagations, "backtracks": sat.backtracks,
+        "steps": result.steps, "waves": result.waves,
+        "runtime_s": dt, "solved": result.solved and engine.is_solved(),
+    }
 
 
 def team_evaluate(clue: dict, assignment: dict, n: int) -> bool:
