@@ -14,7 +14,7 @@ import sys
 import time
 from pathlib import Path
 
-SOURCE_ROOT = Path(__file__).resolve().parent.parent   # Source/  (so `import engine`, `import agent` ... work)
+SOURCE_ROOT = Path(__file__).resolve().parent.parent
 if str(SOURCE_ROOT) not in sys.path:
     sys.path.insert(0, str(SOURCE_ROOT))
 
@@ -37,38 +37,41 @@ def run_reference(path: str) -> dict:
     return out
 
 
-def run_team(path: str) -> dict:
-    """TODO(D + B): run the team's full pipeline on one puzzle file and return METRIC_KEYS.
+def run_team(path: str, heuristic: str = "first", strategy: str = "pruned") -> dict:
+    """Member B's DPLL logic agent on one puzzle file.
 
-    Sketch (rename to match the real modules):
-
-        from engine import GameEngine            # member C
-        from agent import LogicAgent             # member B
-        engine = GameEngine.load(path)
-        agent = LogicAgent(engine)               # agent only gets public state
-        t0 = time.perf_counter()
-        result = agent.run()                     # runs until solved / stuck / inconsistent
-        dt = time.perf_counter() - t0
-        cnf, sat = agent.cnf_stats, agent.sat_stats
-        return {
-            "primary_vars": cnf.primary_vars, "aux_vars": cnf.aux_vars, "clauses": cnf.clauses,
-            "sat_calls": sat.calls, "decisions": sat.decisions,
-            "propagations": sat.propagations, "backtracks": sat.backtracks,
-            "steps": len(result.trace), "waves": result.waves,
-            "runtime_s": dt, "solved": engine.is_solved(),
-        }
+    The engine judges each verdict with its own solver calls; only the agent's
+    SAT calls are counted. CNF sizes are those of the largest KB_t of the run.
+    Swap LocalGameEngine for member C's engine once it implements
+    src.agent.GameEngineProtocol (public_state / submit_verdict).
     """
-    raise NotImplementedError("Edit run_team() in tools/adapter.py to call the team's agent.")
+    from src.agent import LocalGameEngine, LogicAgent
+    engine = LocalGameEngine.load(path)
+    agent = LogicAgent(engine, heuristic=heuristic, strategy=strategy)   # public state only
+    t0 = time.perf_counter()
+    result = agent.run()
+    dt = time.perf_counter() - t0
+    cnf, sat = result.max_kb_stats, result.sat_stats
+    return {
+        "primary_vars": cnf["primary_vars"], "aux_vars": cnf["aux_vars"], "clauses": cnf["clauses"],
+        "sat_calls": sat.calls, "decisions": sat.decisions,
+        "propagations": sat.propagations, "backtracks": sat.backtracks,
+        "steps": result.steps, "waves": result.waves,
+        "runtime_s": dt, "solved": result.solved and engine.is_solved(),
+    }
 
 
 def team_evaluate(clue: dict, assignment: dict, n: int) -> bool:
-    """TODO(A): call the team's direct semantic evaluator.
+    """Member A's direct semantic evaluator.
     `assignment` maps cell id -> True (criminal) / False (innocent) for ALL cells."""
-    raise NotImplementedError("Edit team_evaluate() in tools/adapter.py.")
+    from src.logic.evaluator import evaluate_clue
+    return evaluate_clue(clue, assignment, n)
 
 
 def team_encode(clue: dict, n: int) -> list[list[int]]:
-    """TODO(A): return the CNF clauses (DIMACS ints) for ONE clue.
-    Primary variables must be 1..n*n in row-major order (see schema.py);
-    auxiliary variables, if any, must be > n*n."""
-    raise NotImplementedError("Edit team_encode() in tools/adapter.py.")
+    """Member A's CNF encoder.
+    Returns the CNF clauses (DIMACS ints) for ONE clue.
+    Primary variables are 1..n*n in row-major order;
+    auxiliary variables, if any, are > n*n."""
+    from src.logic.encoder import encode_clue
+    return encode_clue(clue, n)

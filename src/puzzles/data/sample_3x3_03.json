@@ -1,0 +1,155 @@
+{
+  "puzzle_id": "sample_3x3_03",
+  "grid_size": 3,
+  "initial_revealed": [
+    "A1",
+    "A2"
+  ],
+  "characters": [
+    {
+      "name": "Anna",
+      "cell": "A1",
+      "profession": "Astronomer",
+      "hidden_status": "CRIMINAL",
+      "clue": {
+        "clue_id": "ext_A1",
+        "clue_type": "EXACTLY",
+        "k": 2,
+        "region": {
+          "region_type": "ROW",
+          "row": 1
+        },
+        "target_status": "CRIMINAL",
+        "text": "Exactly 2 Criminals in row 1."
+      }
+    },
+    {
+      "name": "Ben",
+      "cell": "B1",
+      "profession": "Botanist",
+      "hidden_status": "CRIMINAL",
+      "clue": {
+        "clue_id": "ext_B1",
+        "clue_type": "PARITY",
+        "parity": 1,
+        "region": {
+          "region_type": "COL",
+          "col": "B"
+        },
+        "target_status": "CRIMINAL",
+        "text": "An ODD number of Criminals in column B."
+      }
+    },
+    {
+      "name": "Cara",
+      "cell": "C1",
+      "profession": "Chemist",
+      "hidden_status": "INNOCENT",
+      "clue": {
+        "clue_id": "ext_C1",
+        "clue_type": "COUNT_COMPARE",
+        "region": {
+          "region_type": "COL",
+          "col": "A"
+        },
+        "compare_op": "==",
+        "region2": {
+          "region_type": "COL",
+          "col": "C"
+        },
+        "target_status": "CRIMINAL",
+        "text": "Equal number of Criminals in column A and column C."
+      }
+    },
+    {
+      "name": "Dan",
+      "cell": "A2",
+      "profession": "Diver",
+      "hidden_status": "INNOCENT",
+      "clue": {
+        "clue_id": "ext_A2",
+        "clue_type": "DIFFERENT",
+        "person": "A1",
+        "person2": "A2",
+        "text": "Anna and Dan have different statuses."
+      }
+    },
+    {
+      "name": "Eva",
+      "cell": "B2",
+      "profession": "Economist",
+      "hidden_status": "INNOCENT",
+      "clue": {
+        "clue_id": "ext_B2",
+        "clue_type": "PARITY",
+        "parity": 0,
+        "region": {
+          "region_type": "CORNERS"
+        },
+        "target_status": "CRIMINAL",
+        "text": "An EVEN number of Criminals in the corners."
+      }
+    },
+    {
+      "name": "Finn",
+      "cell": "C2",
+      "profession": "Filmmaker",
+      "hidden_status": "INNOCENT",
+      "clue": {
+        "clue_id": "ext_C2",
+        "clue_type": "AT_MOST",
+        "k": 1,
+        "region": {
+          "region_type": "ROW",
+          "row": 2
+        },
+        "target_status": "CRIMINAL",
+        "text": "At most 1 Criminal in row 2."
+      }
+    },
+    {
+      "name": "Gia",
+      "cell": "A3",
+      "profession": "Gardener",
+      "hidden_status": "INNOCENT",
+      "clue": {
+        "clue_id": "ext_A3",
+        "clue_type": "SAME",
+        "person": "A2",
+        "person2": "A3",
+        "text": "Dan and Gia have the same status."
+      }
+    },
+    {
+      "name": "Hank",
+      "cell": "B3",
+      "profession": "Hypnotist",
+      "hidden_status": "INNOCENT",
+      "clue": {
+        "clue_id": "ext_B3",
+        "clue_type": "ALL_SAME",
+        "region": {
+          "region_type": "EXPLICIT",
+          "cells": [
+            "A3",
+            "B3"
+          ]
+        },
+        "text": "Gia and Hank have the same status."
+      }
+    },
+    {
+      "name": "Iris",
+      "cell": "C3",
+      "profession": "Inventor",
+      "hidden_status": "CRIMINAL",
+      "clue": {
+        "clue_id": "ext_C3",
+        "clue_type": "FACT",
+        "person": "C3",
+        "status": "CRIMINAL",
+        "text": "Iris is a Criminal."
+      }
+    }
+  ]
+}
