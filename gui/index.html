@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Griductive</title>
+  <style>
+    @font-face {
+      font-family: Kermel;
+      src: url(static/fonts/iCiel_Kermel.ttf)
+    }
+
+    @font-face {
+      font-family: Nokio;
+      src: url(static/fonts/FS_NokioMedium.ttf)
+    }
+
+    @font-face {
+      font-family: OldStyle;
+      src: url(static/fonts/iCielBCOldStyle-Regular.ttf)
+    }
+
+    :root {
+      --fg: #231f20;
+      --dot: #f3dfb8;
+      --ink: #231f20;
+      --cream: #fff6e5;
+      --pink: #ff5fa8;
+      --yellow: #ffe236;
+      --cyan: #4cecff;
+      --paper: #fffdf6;
+      --rim: 4px
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: var(--cream);
+      background-image: radial-gradient(var(--dot) 2px, transparent 2.5px);
+      background-size: 26px 26px;
+      color: var(--fg);
+      font: 17px/1.5 Nokio, sans-serif;
+      min-height: 100vh
+    }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 18px 16px 40px
+    }
+
+    h1 {
+      font: 400 clamp(54px, 9vw, 96px)/1 Kermel, sans-serif;
+      margin: 6px 0 0;
+      text-align: center;
+      color: var(--yellow);
+      -webkit-text-stroke: 3px var(--ink);
+      paint-order: stroke fill;
+      letter-spacing: 2px;
+      text-shadow: 0 3px 0 var(--ink), 0 6px 0 var(--pink), 0 9px 0 var(--ink), 0 12px 0 var(--ink), 0 15px 0 var(--ink);
+      transform: rotate(-2deg)
+    }
+
+    .sub {
+      text-align: center;
+      margin: 26px 0 16px;
+      max-width: 60ch;
+      margin-inline: auto
+    }
+
+    .bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 22px
+    }
+
+    .btn {
+      font: 400 18px OldStyle, sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px 8px 10px;
+      background: var(--paper);
+      color: var(--fg);
+      border: var(--rim) solid var(--ink);
+      border-radius: 18px;
+      box-shadow: 0 6px 0 var(--ink);
+      cursor: pointer;
+      transition: transform .08s, box-shadow .08s
+    }
+
+    .btn img {
+      width: 30px;
+      height: 30px
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 0 var(--ink)
+    }
+
+    .btn:active:not(:disabled) {
+      transform: translateY(6px);
+      box-shadow: 0 0 0 var(--ink)
+    }
+
+    .btn:disabled {
+      opacity: .45;
+      cursor: not-allowed
+    }
+
+    .btn:focus-visible,
+    .cell:focus-visible {
+      outline: 4px solid var(--cyan);
+      outline-offset: 3px
+    }
+
+    .btn.pink {
+      background: var(--pink)
+    }
+
+    .btn.cyan {
+      background: var(--cyan)
+    }
+
+    .btn.yellow {
+      background: var(--yellow)
+    }
+
+    .speed {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font: 16px OldStyle
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      gap: 28px;
+      align-items: start
+    }
+
+    .board-box {
+      background: var(--paper);
+      border: var(--rim) solid var(--ink);
+      border-radius: 28px;
+      box-shadow: 0 10px 0 var(--ink);
+      padding: 16px 16px 20px
+    }
+
+    .board {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 28px repeat(var(--n), 1fr);
+      grid-template-rows: 24px repeat(var(--n), auto)
+    }
+
+    .lab {
+      font: 20px OldStyle;
+      display: grid;
+      place-items: center
+    }
+
+    .cell {
+      position: relative;
+      aspect-ratio: 1/1.28;
+      perspective: 700px;
+      border: 0;
+      background: none;
+      padding: 0;
+      cursor: pointer;
+      font: inherit;
+      color: inherit
+    }
+
+    .face {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      border: var(--rim) solid var(--ink);
+      border-radius: 18px;
+      box-shadow: 0 6px 0 var(--ink);
+      background: #fff3cf;
+      transition: transform .5s cubic-bezier(.3, 1.4, .5, 1), box-shadow .15s;
+      transform-style: preserve-3d
+    }
+
+    .cell:hover .face {
+      transform: translateY(-3px) rotateX(6deg)
+    }
+
+    .cell .nm {
+      font: 400 clamp(15px, 2.4vw, 21px)/1.1 Nokio
+    }
+
+    .cell .jb {
+      font-size: clamp(11px, 1.6vw, 14px);
+      opacity: .7
+    }
+
+    .cell.has-clue .face {
+      justify-content: flex-start;
+      padding: 24px 8px 8px;
+      gap: 1px;
+      overflow: hidden
+    }
+
+    .cell.has-clue .jb {
+      display: none
+    }
+
+    .cell.has-clue .av {
+      display: block;
+      width: 40%;
+      max-width: 54px;
+      flex: 0 0 auto
+    }
+
+    .cell.has-clue .nm {
+      max-width: 100%;
+      margin: 3px 0;
+      font-size: clamp(12px, 1.8vw, 18px)
+    }
+
+    .cell .inline-clue {
+      display: block;
+      width: 100%;
+      min-height: 0;
+      flex: 1;
+      overflow: auto;
+      border-top: 1px solid rgba(35, 31, 32, .25);
+      padding-top: 4px;
+      font: 400 clamp(9px, 1vw, 12px)/1.15 Nokio;
+      text-align: left;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere
+    }
+
+    .cell .face img {
+      width: 38%;
+      max-width: 56px
+    }
+
+    .cell.down .face {
+      opacity: .92
+    }
+
+    .cell.down .face img {
+      opacity: .35;
+      filter: grayscale(.6)
+    }
+
+    .cell.C .face {
+      background: var(--pink)
+    }
+
+    .cell.I .face {
+      background: var(--cyan)
+    }
+
+    .cell.flip .face {
+      animation: flip .6s cubic-bezier(.3, 1.3, .5, 1)
+    }
+
+    @keyframes flip {
+      from {
+        transform: rotateY(180deg) scale(.9)
+      }
+
+      to {
+        transform: none
+      }
+    }
+
+    .cell.shake .face {
+      animation: shake .4s
+    }
+
+    @keyframes shake {
+      25% {
+        transform: translateX(-7px) rotate(-3deg)
+      }
+
+      75% {
+        transform: translateX(7px) rotate(3deg)
+      }
+    }
+
+    .cell.sel .face {
+      box-shadow: 0 6px 0 var(--ink), 0 0 0 6px var(--yellow), 0 0 0 9px var(--ink)
+    }
+
+    .cell.hl .face {
+      box-shadow: 0 6px 0 var(--ink), 0 0 0 5px #fff, 0 0 0 8px var(--pink);
+      animation: pulse 1s infinite alternate
+    }
+
+    @keyframes pulse {
+      to {
+        transform: translateY(-4px)
+      }
+    }
+
+    .cell.hint .face {
+      animation: pulse .5s infinite alternate;
+      background: var(--yellow)
+    }
+
+    .tag {
+      position: absolute;
+      top: 5px;
+      left: 9px;
+      font: 13px OldStyle;
+      z-index: 1
+    }
+
+    .call {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 24px;
+      min-height: 62px
+    }
+
+    .side {
+      display: grid;
+      gap: 22px
+    }
+
+    .card {
+      background: var(--paper);
+      border: var(--rim) solid var(--ink);
+      border-radius: 24px;
+      box-shadow: 0 8px 0 var(--ink);
+      padding: 14px 18px
+    }
+
+    .card h2 {
+      font: 400 24px OldStyle;
+      margin: 0 0 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .card h2 img {
+      width: 34px
+    }
+
+    #log {
+      max-height: 210px;
+      overflow: auto;
+      padding-left: 20px;
+      margin: 0;
+      font-size: 15px
+    }
+
+    #toast {
+      min-height: 56px;
+      margin-top: 22px;
+      text-align: center
+    }
+
+    .side #toast {
+      min-height: 56px;
+      margin-top: 0
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 8px 18px;
+      border: var(--rim) solid var(--ink);
+      border-radius: 999px;
+      box-shadow: 0 5px 0 var(--ink);
+      font: 19px OldStyle;
+      animation: pop .35s cubic-bezier(.3, 1.6, .5, 1)
+    }
+
+    @keyframes pop {
+      from {
+        transform: scale(.6)
+      }
+    }
+
+    .ok {
+      background: var(--cyan)
+    }
+
+    .warn {
+      background: var(--yellow)
+    }
+
+    .bad {
+      background: var(--pink)
+    }
+
+    .stats {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      font-size: 15px
+    }
+
+    [data-theme=dark] {
+      --cream: #2b2433;
+      --paper: #3b3247;
+      --fg: #fff6e5;
+      --dot: #352c3f;
+      --ink: #120e16
+    }
+
+    .face,
+    .pill,
+    .btn.pink,
+    .btn.cyan,
+    .btn.yellow {
+      color: #231f20
+    }
+
+    [hidden] {
+      display: none !important
+    }
+
+    .top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px
+    }
+
+    .cal {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--paper);
+      border: var(--rim) solid var(--ink);
+      border-radius: 26px;
+      box-shadow: 0 6px 0 var(--ink);
+      padding: 8px 10px
+    }
+
+    .week {
+      display: flex;
+      gap: 6px;
+      align-items: center
+    }
+
+    .wl {
+      font: 13px OldStyle;
+      opacity: .7
+    }
+
+    .chip {
+      font: 16px OldStyle;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 46px;
+      padding: 4px 6px;
+      border: 3px solid transparent;
+      border-radius: 16px;
+      background: none;
+      color: var(--fg);
+      cursor: pointer;
+      position: relative
+    }
+
+    .chip b {
+      font: 400 20px OldStyle
+    }
+
+    .chip:hover:not(:disabled) {
+      background: var(--yellow);
+      color: #231f20
+    }
+
+    .chip.sel {
+      background: var(--pink);
+      border-color: var(--ink);
+      color: #231f20;
+      box-shadow: 0 4px 0 var(--ink)
+    }
+
+    .chip.today::after {
+      content: "";
+      position: absolute;
+      bottom: 1px;
+      width: 6px;
+      height: 6px;
+      border-radius: 9px;
+      background: var(--cyan);
+      border: 2px solid var(--ink)
+    }
+
+    .chip:disabled {
+      opacity: .3;
+      cursor: not-allowed
+    }
+
+    .chip img {
+      position: absolute;
+      top: -8px;
+      right: -4px;
+      width: 20px
+    }
+
+    .arrow {
+      font: 24px OldStyle;
+      border: 0;
+      background: none;
+      color: var(--fg);
+      cursor: pointer;
+      padding: 0 6px
+    }
+
+    .arrow:disabled {
+      opacity: .25
+    }
+
+    .clock {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--paper);
+      border: var(--rim) solid var(--ink);
+      border-radius: 26px;
+      box-shadow: 0 6px 0 var(--ink);
+      padding: 6px 10px 6px 14px
+    }
+
+    .clock img {
+      width: 30px
+    }
+
+    .clock b {
+      font: 400 28px OldStyle;
+      min-width: 84px;
+      text-align: center;
+      letter-spacing: 1px
+    }
+
+    .btn.sm {
+      padding: 4px 8px;
+      border-radius: 14px;
+      box-shadow: 0 4px 0 var(--ink)
+    }
+
+    .btn.sm img {
+      width: 26px;
+      height: 26px
+    }
+
+    .dayinfo {
+      text-align: center;
+      margin: 12px 0 18px;
+      font-size: 16px
+    }
+
+    .paused .board-box,
+    .paused .side {
+      filter: blur(12px);
+      pointer-events: none
+    }
+
+    .ov {
+      position: fixed;
+      inset: 0;
+      background: rgba(25, 12, 35, .6);
+      display: grid;
+      place-items: center;
+      z-index: 50;
+      padding: 12px
+    }
+
+    .sheet {
+      background: var(--paper);
+      border: var(--rim) solid var(--ink);
+      border-radius: 28px;
+      box-shadow: 0 10px 0 var(--ink);
+      width: min(540px, 100%);
+      max-height: 90vh;
+      overflow: auto;
+      padding: 18px 22px 22px;
+      animation: pop .3s cubic-bezier(.3, 1.5, .5, 1)
+    }
+
+    .sheet h2 {
+      font: 400 30px OldStyle;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: space-between
+    }
+
+    .sec {
+      font: 14px OldStyle;
+      letter-spacing: 2px;
+      opacity: .65;
+      margin: 18px 0 4px;
+      text-transform: uppercase
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 0;
+      border: 0;
+      border-bottom: 2px dashed color-mix(in srgb, var(--fg) 22%, transparent);
+      width: 100%;
+      background: none;
+      color: var(--fg);
+      text-align: left;
+      font: inherit
+    }
+
+    .row .t {
+      flex: 1
+    }
+
+    .row .t b {
+      font: 400 20px OldStyle;
+      display: block
+    }
+
+    .row .t span {
+      font-size: 14px;
+      opacity: .75
+    }
+
+    .row img {
+      width: 40px
+    }
+
+    button.row {
+      cursor: pointer
+    }
+
+    button.row:hover {
+      background: color-mix(in srgb, var(--yellow) 25%, transparent)
+    }
+
+    .sw {
+      width: 60px;
+      height: 34px;
+      border: var(--rim) solid var(--ink);
+      border-radius: 99px;
+      background: #bbb;
+      position: relative;
+      cursor: pointer;
+      flex: none;
+      padding: 0
+    }
+
+    .sw::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 3px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid var(--ink);
+      transition: transform .15s
+    }
+
+    .sw[aria-checked=true] {
+      background: var(--cyan)
+    }
+
+    .sw[aria-checked=true]::after {
+      transform: translateX(24px)
+    }
+
+    .sw:focus-visible {
+      outline: 4px solid var(--cyan);
+      outline-offset: 3px
+    }
+
+    #statsBox {
+      font-size: 16px;
+      padding: 10px 4px
+    }
+
+    #statsBox div {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 0
+    }
+
+    @media(max-width:820px) {
+      .main {
+        grid-template-columns: 1fr
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+      * {
+        animation: none !important;
+        transition: none !important
+      }
+    }
+
+    .av {
+      width: 66%;
+      max-width: 96px;
+      margin-top: 6px;
+      filter: drop-shadow(0 4px 0 rgba(0, 0, 0, .16));
+      transition: transform .2s
+    }
+
+    .cell:hover .av {
+      transform: translateY(-3px) scale(1.05)
+    }
+
+    .cell.down .av {
+      filter: grayscale(1) opacity(.5)
+    }
+
+    .cell .face img.badge {
+      position: absolute;
+      top: 3px;
+      right: 5px;
+      width: 26px;
+      max-width: none
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <h1>Griductive</h1>
+    <p class="sub">Mỗi người là tội phạm hoặc vô tội. Chỉ gọi tên khi suy luận chắc chắn, đừng đoán mò.</p>
+    <div class="top">
+      <div class="cal"><button class="arrow" id="wPrev" aria-label="Tuần trước">‹</button><span class="wl">DỄ</span>
+        <div class="week" id="week"></div><span class="wl">KHÓ</span><button class="arrow" id="wNext"
+          aria-label="Tuần sau">›</button>
+      </div>
+      <div class="clock"><img src="static/icons/time.svg" alt=""><b id="clk">00:00</b>
+        <button class="btn sm" id="bPause" aria-label="Tạm dừng"><img src="static/icons/control.svg" alt=""></button>
+        <button class="btn sm" id="bSet" aria-label="Cài đặt"><img src="static/icons/wrench.svg" alt=""></button>
+      </div>
+    </div>
+    <div class="dayinfo" id="dayinfo"></div>
+    <div class="bar">
+      <button class="btn yellow" id="bLoad"><img src="static/icons/backpack.svg" alt="">Tải puzzle</button>
+      <button class="btn" id="bRestart"><img src="static/icons/on-off-1.svg" alt="">Chơi lại</button>
+      <button class="btn cyan" id="bHint"><img src="static/icons/help.svg" alt="">Gợi ý</button>
+      <button class="btn pink" id="bAuto"><img src="static/icons/wand.svg" alt="">Tự giải</button>
+      <button class="btn" id="bStep"><img src="static/icons/keyboard-direction.svg" alt="">Từng bước</button>
+      <label class="speed"><img src="static/icons/time.svg" alt="" width="28">Tốc độ <input type="range" id="speed"
+          min="1" max="5" value="3"></label>
+      <input type="file" id="file" accept=".json" hidden>
+    </div>
+    <div class="main">
+      <section>
+        <div class="board-box">
+          <div class="board" id="board"></div>
+          <div class="call" id="call"></div>
+        </div>
+      </section>
+      <aside class="side">
+        <div class="card">
+          <h2><img src="static/icons/book-library.svg" alt="">Manh mối</h2>
+          <div id="clue">Chạm vào một thẻ đã lật để đọc manh mối của nó.</div>
+        </div>
+        <div class="card">
+          <h2><img src="static/icons/search.svg" alt="">Nhật ký suy luận</h2>
+          <ol id="log"></ol>
+        </div>
+        <div class="card">
+          <h2><img src="static/icons/graph-bar.svg" alt="">Thống kê</h2>
+          <div class="stats" id="stats"></div>
+        </div>
+        <div id="toast"></div>
+      </aside>
+    </div>
+  </div>
+  <div class="ov" id="pauseM" hidden role="dialog" aria-modal="true" aria-labelledby="pt">
+    <div class="sheet" style="text-align:center">
+      <img src="static/icons/ghost.svg" alt="" width="84">
+      <h2 id="pt" style="justify-content:center">Game đã tạm dừng</h2>
+      <p id="pauseWhy">Bạn vừa rời khỏi tab nên đồng hồ đã dừng lại.</p>
+      <p>Bạn có muốn tiếp tục chơi không?</p>
+      <button class="btn cyan" id="bResume"><img src="static/icons/validation-1.svg" alt="">Tiếp tục</button>
+    </div>
+  </div>
+  <div class="ov" id="setM" hidden role="dialog" aria-modal="true" aria-labelledby="st">
+    <div class="sheet">
+      <h2 id="st">Cài đặt <button class="btn sm" id="bClose" aria-label="Đóng"><img src="static/icons/cancel-2.svg"
+            alt=""></button></h2>
+      <div class="sec">Hiển thị</div>
+      <div class="row"><img src="static/icons/app-window.svg" alt="">
+        <div class="t"><b>Hiện thời gian</b><span>Tắt để ẩn con số, đồng hồ vẫn chạy ngầm.</span></div><button
+          class="sw" role="switch" data-k="showTime" aria-label="Hiện thời gian"></button>
+      </div>
+      <div class="row"><img src="static/icons/muslim.svg" alt="">
+        <div class="t"><b>Giao diện tối</b><span>Màu tím đêm dịu mắt.</span></div><button class="sw" role="switch"
+          data-k="dark" aria-label="Giao diện tối"></button>
+      </div>
+      <div class="row"><img src="static/icons/mobile-phone.svg" alt="">
+        <div class="t"><b>Rung phản hồi</b><span>Rung khi lật thẻ hoặc gọi sai (thiết bị hỗ trợ).</span></div><button
+          class="sw" role="switch" data-k="haptics" aria-label="Rung phản hồi"></button>
+      </div>
+      <div class="row"><img src="static/icons/time.svg" alt="">
+        <div class="t"><b>Tự tạm dừng khi rời tab</b><span>Hiện thông báo và dừng đồng hồ khi bạn chuyển tab.</span>
+        </div><button class="sw" role="switch" data-k="autoPause" aria-label="Tự tạm dừng"></button>
+      </div>
+      <div class="sec">Trò chơi</div>
+      <button class="row" id="bShare"><img src="static/icons/mail.svg" alt="">
+        <div class="t"><b>Chia sẻ puzzle</b><span>Sao chép JSON của bàn này để gửi cho bạn.</span></div>
+      </button>
+      <button class="row" id="bStats"><img src="static/icons/graph-bar.svg" alt="">
+        <div class="t"><b>Thống kê</b><span>Chuỗi ngày, số bàn đã giải, thời gian tốt nhất.</span></div>
+      </button>
+      <div id="statsBox" hidden></div>
+      <button class="row" id="bAgain"><img src="static/icons/on-off-1.svg" alt="">
+        <div class="t"><b>Chơi lại</b><span>Xóa tiến độ và đồng hồ của bàn hôm nay.</span></div>
+      </button>
+    </div>
+  </div>
+  <script src="static/avatar.js"></script>
+  <script>
+    // ===== Dữ liệu mẫu (đúng schema JSON của nhóm). Khi nối backend: thay Engine/Agent bên dưới bằng gọi API =====
+    const PUZZLES = [];
+    let P = null;
+    const IC = n => `<img src="static/icons/${n}.svg" alt="">`, $ = s => document.querySelector(s), sleep = ms => new Promise(r => setTimeout(r, ms));
+    let elapsed = 0, solved = false, assisted = false, paused = false, modalOpen = false, custom = false, curDate = null, viewMon = null, last = performance.now(), N, cells, rev, sel = null, hl = [], busy = false, sat = 0, steps = 0, hintCell = null;
+    const L = { CRIMINAL: "Tội phạm", INNOCENT: "Vô tội" };
+    // ---- region + evaluator (bản JS tạm cho Mock) ----
+    function region(r) {
+      const out = [];
+      if (r.kind == "ROW") return cells.filter(c => +c.slice(1) == r.index);
+      if (r.kind == "COL") return cells.filter(c => c[0] == r.index);
+      if (r.kind == "CELLS") return r.cells;
+      const i = cells.indexOf(r.cell), y = Math.floor(i / N), x = i % N;
+      cells.forEach((c, j) => { const b = Math.floor(j / N), a = j % N; if (j != i && Math.abs(b - y) <= 1 && Math.abs(a - x) <= 1) out.push(c) }); return out
+    }
+    const cnt = (r, a) => region(r).reduce((s, c) => s + a[c], 0);
+    function holds(k, a) {
+      switch (k.type) {
+        case "FACT": return a[k.cell] == (k.status == "CRIMINAL" ? 1 : 0);
+        case "SAME": return a[k.a] == a[k.b]; case "DIFFERENT": return a[k.a] != a[k.b];
+        case "EXACTLY": return cnt(k.region, a) == k.k; case "AT_LEAST": return cnt(k.region, a) >= k.k; case "AT_MOST": return cnt(k.region, a) <= k.k;
+        case "PARITY": return cnt(k.region, a) % 2 == (k.parity == "EVEN" ? 0 : 1);
+        case "COMPARE": { const l = cnt(k.left, a), r = cnt(k.right, a); return k.op == "GT" ? l > r : k.op == "LT" ? l < r : l == r }
+      }return true
+    }
+    const nm = c => P.characters[c].name;
+    const rt = r => r.kind == "ROW" ? `hàng ${r.index}` : r.kind == "COL" ? `cột ${r.index}` : r.kind == "NEIGHBORS" ? `hàng xóm của ${nm(r.cell)}` : `các ô ${r.cells.map(nm).join(", ")}`;
+    function clueText(k) {
+      switch (k.type) {
+        case "FACT": return `${nm(k.cell)} là ${L[k.status].toLowerCase()}.`;
+        case "SAME": return `${nm(k.a)} và ${nm(k.b)} cùng phe.`; case "DIFFERENT": return `${nm(k.a)} và ${nm(k.b)} khác phe.`;
+        case "EXACTLY": return k.k ? `Có đúng ${k.k} tội phạm trong ${rt(k.region)}.` : `Không có tội phạm nào trong ${rt(k.region)}.`;
+        case "AT_LEAST": return `Có ít nhất ${k.k} tội phạm trong ${rt(k.region)}.`; case "AT_MOST": return `Có tối đa ${k.k} tội phạm trong ${rt(k.region)}.`;
+        case "PARITY": return `Số tội phạm trong ${rt(k.region)} là số ${k.parity == "EVEN" ? "chẵn" : "lẻ"}.`;
+        case "COMPARE": return `${rt(k.left)} có ${{ GT: "nhiều hơn", LT: "ít hơn", EQ: "bằng" }[k.op]} ${rt(k.right)}.`
+      }return "?"
+    }
+    function clueCells(k) { return k.region ? region(k.region) : k.left ? [...region(k.left), ...region(k.right)] : [k.cell, k.a, k.b].filter(Boolean) }
+    // ---- Mock Agent: vét cạn mô hình (chỉ cho N<=4). Bản thật = CNF + DPLL của nhóm ----
+    function models(subset) {
+      sat++; const out = []; for (let m = 0; m < 1 << (N * N); m++) {
+        const a = {}; cells.forEach((c, i) => a[c] = m >> i & 1);
+        if (Object.entries(rev).every(([c, s]) => a[c] == (s == "CRIMINAL" ? 1 : 0)) && subset.every(c => holds(P.clues[c], a))) out.push(a)
+      } return out
+    }
+    function forced(subset = Object.keys(rev)) {
+      const ms = models(subset); if (!ms.length) return { inconsistent: true }; const f = {};
+      cells.forEach(c => { if (c in rev) return; const v = new Set(ms.map(m => m[c])); if (v.size == 1) f[c] = [...v][0] ? "CRIMINAL" : "INNOCENT" }); return { f, n: ms.length }
+    }
+    function submit(c, v) {
+      const r = forced(); if (r.inconsistent) return "INCONSISTENT"; const t = r.f[c]; if (!t) return "NOT_PROVABLE"; if (t != v) return "CONTRADICTED";
+      rev[c] = v; steps++; solved = Object.keys(rev).length == cells.length; save(); if (solved) renderWeek(); return "ACCEPTED"
+    }
+    function explain(c, v) { let s = Object.keys(rev); for (const k of [...s]) { const t = s.filter(x => x != k); if (forced(t).f?.[c] == v) s = t } return s }
+    // ---- Vẽ ----
+    function load(p, saved) {
+      P = p; N = P.size; cells = Object.keys(P.characters); rev = {}; P.initial_revealed.forEach(c => rev[c] = P.solution[c]); if (saved && saved.rev) Object.assign(rev, saved.rev); elapsed = saved ? saved.elapsed || 0 : 0; assisted = !!(saved && saved.assisted); solved = Object.keys(rev).length == cells.length; sel = null; hl = []; sat = 0; steps = 0; hintCell = null;
+      $("#log").innerHTML = ""; $("#toast").innerHTML = ""; $("#call").innerHTML = ""; $("#clue").textContent = "Chạm vào một thẻ đã lật để đọc manh mối của nó."; draw()
+    }
+    function draw(flipped) {
+      renderClock(); const b = $("#board"); b.style.setProperty("--n", N); let h = '<div></div>' + [...Array(N)].map((_, i) => `<div class="lab">${"ABCDE"[i]}</div>`).join("");
+      cells.forEach((c, i) => {
+        if (i % N == 0) h += `<div class="lab">${c[1]}</div>`; const s = rev[c], cls = ["cell", s ? s[0] : "down", c == sel ? "sel" : "", hl.includes(c) ? "hl" : "", c == hintCell ? "hint" : "", c == flipped ? "flip" : ""].join(" ");
+        h += `<button class="${cls}" data-c="${c}" aria-label="${c} ${nm(c)}${s ? ", " + L[s] : ", chưa lật"}"><div class="face"><span class="tag">${c}</span>${avatar(c, nm(c), P.characters[c].look, s)}${s ? `<img class="badge" src="static/icons/${s == "CRIMINAL" ? "ghost" : "love"}.svg" alt="">` : ""}<span class="nm">${nm(c)}</span><span class="jb">${P.characters[c].job}</span></div></button>`
+      });
+      b.innerHTML = h; b.querySelectorAll(".cell").forEach(e => e.onclick = () => pick(e.dataset.c));
+      $("#stats").innerHTML = `<span>Bước: <b>${steps}</b></span><span>Lượt SAT (mock): <b>${sat}</b></span><span>Đã lật: <b>${Object.keys(rev).length}/${cells.length}</b></span>`;
+    }
+    function toast(t, c) { $("#toast").innerHTML = `<span class="pill ${c}">${t}</span>` }
+    function log(t) { const li = document.createElement("li"); li.textContent = t; $("#log").prepend(li) }
+    function pick(c) {
+      if (busy || paused) return; sel = c; hintCell = null;
+      if (rev[c]) { const k = P.clues[c]; hl = clueCells(k); $("#clue").innerHTML = `<b>${nm(c)} (${c}):</b> ${clueText(k)}`; $("#call").innerHTML = "" }
+      else {
+        hl = []; $("#clue").textContent = "Thẻ này đang úp. Hãy gọi tên nếu bạn chắc chắn.";
+        $("#call").innerHTML = `<button class="btn pink" data-v="CRIMINAL">${IC("ghost")}Tội phạm</button><button class="btn cyan" data-v="INNOCENT">${IC("love")}Vô tội</button>`;
+        $("#call").querySelectorAll("button").forEach(b => b.onclick = () => call(c, b.dataset.v))
+      }
+      draw()
+    }
+    function call(c, v) {
+      const o = submit(c, v);
+      if (o == "ACCEPTED") {
+        log(`${c} ${nm(c)}: ${L[v]} (chứng minh được)`); buzz(20); sel = null; hl = []; $("#call").innerHTML = "";
+        const k = P.clues[c]; $("#clue").innerHTML = `<b>Manh mối mới của ${nm(c)}:</b> ${clueText(k)}`; hl = clueCells(k); draw(c);
+        if (Object.keys(rev).length == cells.length) toast(doneMsg(), "ok"); else toast(`Đúng rồi, ${nm(c)} là ${L[v].toLowerCase()}`, "ok")
+      }
+      else {
+        const e = document.querySelector(`[data-c=${c}]`); e.classList.add("shake");
+        toast(o == "CONTRADICTED" ? "Mâu thuẫn: suy luận ra điều ngược lại" : "Chưa đủ căn cứ để kết luận", "warn bad".split(" ")[o == "CONTRADICTED" ? 1 : 0]); log(`${c} ${nm(c)}: ${o}`); buzz([30, 40, 30])
+      }
+    }
+    $("#bHint").onclick = () => {
+      if (busy || paused || solved) return; const r = forced(); if (!r.f || !Object.keys(r.f).length) return toast("Chưa có ai chắc chắn được", "warn");
+      const c = cells.find(x => r.f[x]); hintCell = c; assisted = true; save(); sel = null; hl = explain(c, r.f[c]).flatMap(k => clueCells(P.clues[k])); draw(); toast(`Gợi ý: nhìn ${nm(c)} (${c}), các ô sáng là manh mối liên quan`, "warn")
+    };
+    async function stepOnce() {
+      const r = forced(); if (r.inconsistent) { toast("Hệ manh mối mâu thuẫn", "bad"); return false }
+      const c = cells.find(x => r.f[x]); if (!c) { toast(Object.keys(rev).length == cells.length ? doneMsg() : "Kẹt rồi: không còn ai chứng minh được", "warn"); return false }
+      call(c, r.f[c]); return true
+    }
+    function lock(b) { busy = b; document.querySelectorAll(".btn").forEach(x => x.disabled = b && !["bAuto", "bPause", "bSet"].includes(x.id)); $("#bAuto").innerHTML = b ? IC("cancel-2") + "Dừng" : IC("wand") + "Tự giải" }
+    $("#bStep").onclick = () => { if (!busy && !paused && !solved) { assisted = true; save(); stepOnce() } };
+    $("#bAuto").onclick = async () => { if (busy) { busy = false; return } if (solved || paused) return; assisted = true; save(); lock(true); while (busy && await stepOnce()) { await sleep(1400 / +$("#speed").value); while (paused && busy) await sleep(200) } lock(false) };
+    $("#bRestart").onclick = () => { if (!busy) restart() };
+    $("#bLoad").onclick = () => $("#file").click();
+    $("#file").onchange = e => { const f = e.target.files[0]; if (!f) return; f.text().then(t => { try { const p = JSON.parse(t); if (p.size > 4) toast("Mock chỉ vét cạn tới 4×4", "warn"); custom = true; $("#dayinfo").textContent = "Puzzle tùy chọn (không lưu tiến độ)"; load(p); renderWeek() } catch (x) { toast("File puzzle không đọc được", "bad") } }) };
+
+    // ===== Lưu trữ, cài đặt, đồng hồ, lịch =====
+    const DEF = { showTime: true, dark: false, haptics: true, autoPause: true };
+    let store = { settings: { ...DEF }, days: {} };
+    try { const t = JSON.parse(localStorage.getItem("griductive.v1") || "null"); if (t) { store.settings = { ...DEF, ...t.settings }; store.days = t.days || {} } } catch (e) { }
+    const S = store.settings;
+    function persist() { try { localStorage.setItem("griductive.v1", JSON.stringify(store)) } catch (e) { } }
+    const pad = n => String(n).padStart(2, "0"), iso = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`, key = () => iso(curDate);
+    const today = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d };
+    const fmt = s => { s = Math.floor(s); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60); return (h ? h + ":" + pad(m) : pad(m)) + ":" + pad(s % 60) };
+    const doneMsg = () => `Phá án xong trong ${fmt(elapsed)}!${assisted ? " (có dùng trợ giúp)" : ""}`;
+    function save() {
+      if (custom) return; const r = {}; Object.keys(rev).forEach(c => { if (!P.initial_revealed.includes(c)) r[c] = rev[c] });
+      store.days[key()] = { rev: r, elapsed: Math.floor(elapsed), solved, assisted, steps }; persist()
+    }
+    function buzz(p) { if (S.haptics && navigator.vibrate) try { navigator.vibrate(p) } catch (e) { } }
+    function renderClock() { const t = S.showTime ? fmt(elapsed) : "••:••"; if ($("#clk").textContent != t) $("#clk").textContent = t }
+    let tick = 0;
+    setInterval(() => {
+      const t = performance.now(), d = (t - last) / 1000; last = t;
+      if (!paused && !solved && !modalOpen) { elapsed += d; renderClock(); if (++tick % 20 == 0) save() }
+    }, 250);
+    // ---- Tạm dừng khi rời tab ----
+    function pause(msg) { if (paused || solved || modalOpen) return; paused = true; $("#pauseWhy").textContent = msg; $("#pauseM").hidden = false; document.body.classList.add("paused"); $("#bResume").focus(); save() }
+    function resume() { paused = false; $("#pauseM").hidden = true; document.body.classList.remove("paused"); last = performance.now() }
+    document.addEventListener("visibilitychange", () => { if (document.hidden && S.autoPause) pause("Bạn vừa chuyển sang tab khác nên game đã tạm dừng và đồng hồ đã dừng lại.") });
+    window.addEventListener("blur", () => { if (S.autoPause) pause("Cửa sổ vừa mất tiêu điểm nên game đã tạm dừng.") });
+    $("#bPause").onclick = () => pause("Bạn đã tạm dừng game."); $("#bResume").onclick = resume;
+    // ---- Cài đặt ----
+    function applySettings() { document.documentElement.dataset.theme = S.dark ? "dark" : ""; document.querySelectorAll(".sw").forEach(b => b.setAttribute("aria-checked", !!S[b.dataset.k])); renderClock() }
+    document.querySelectorAll(".sw").forEach(b => b.onclick = () => { S[b.dataset.k] = !S[b.dataset.k]; persist(); applySettings(); if (b.dataset.k == "haptics") buzz(40) });
+    function openSet() { if (paused) return; modalOpen = true; $("#statsBox").hidden = true; $("#setM").hidden = false; $("#bClose").focus() }
+    function closeSet() { modalOpen = false; $("#setM").hidden = true; last = performance.now() }
+    $("#bSet").onclick = openSet; $("#bClose").onclick = closeSet;
+    document.addEventListener("keydown", e => { if (e.key == "Escape" && modalOpen) closeSet() });
+    $("#bShare").onclick = () => navigator.clipboard.writeText(JSON.stringify(P, null, 1)).then(() => toast("Đã sao chép puzzle vào clipboard", "ok"), () => toast("Trình duyệt chặn sao chép", "warn"));
+    $("#bAgain").onclick = () => { if (busy) return; closeSet(); restart() };
+    $("#bStats").onclick = () => {
+      const ds = Object.values(store.days).filter(v => v.solved), good = ds.filter(v => !v.assisted).map(v => v.elapsed);
+      let streak = 0, d = today(); if (!store.days[iso(d)]?.solved) d.setDate(d.getDate() - 1); while (store.days[iso(d)]?.solved) { streak++; d.setDate(d.getDate() - 1) }
+      const best = good.length ? fmt(Math.min(...good)) : "—", avg = good.length ? fmt(good.reduce((a, b) => a + b, 0) / good.length) : "—";
+      $("#statsBox").innerHTML = `<div><span>Bàn đã giải</span><b>${ds.length}</b></div><div><span>Chuỗi ngày liên tiếp</span><b>${streak}</b></div><div><span>Giải không trợ giúp</span><b>${good.length}</b></div><div><span>Thời gian tốt nhất</span><b>${best}</b></div><div><span>Thời gian trung bình</span><b>${avg}</b></div>`; $("#statsBox").hidden = !$("#statsBox").hidden
+    };
+    // ---- Lịch theo ngày ----
+    function restart() { if (!custom) { delete store.days[key()]; persist() } load(P); renderWeek(); infoLine() }
+    const WD = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"], LV = ["Dễ", "Dễ", "Vừa", "Vừa", "Khó", "Khó", "Rất khó"], FULL = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+    const monday = d => { const m = new Date(d); m.setDate(m.getDate() - ((m.getDay() + 6) % 7)); m.setHours(0, 0, 0, 0); return m };
+    function infoLine() { if (!curDate || !P) return; const wd = (curDate.getDay() + 6) % 7; $("#dayinfo").textContent = `${FULL[curDate.getDay()]}, ${pad(curDate.getDate())}/${pad(curDate.getMonth() + 1)}/${curDate.getFullYear()} · Độ khó: ${LV[wd]} · ${P.size}×${P.size}${solved ? " · Đã giải" : ""}` }
+    function renderWeek() {
+      const t = today(), w = $("#week"); w.innerHTML = "";
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(viewMon); d.setDate(d.getDate() + i); const k = iso(d), done = store.days[k]?.solved, fut = d > t;
+        const b = document.createElement("button"); b.className = "chip" + (k == iso(curDate) && !custom ? " sel" : "") + (iso(t) == k ? " today" : ""); b.disabled = fut;
+        b.setAttribute("aria-label", `${FULL[d.getDay()]} ${d.getDate()}/${d.getMonth() + 1}${done ? ", đã giải" : ""}`);
+        b.innerHTML = `${done ? '<img src="static/icons/validation-1.svg" alt="">' : ""}${WD[d.getDay()]}<b>${d.getDate()}</b>`; b.onclick = () => { if (!busy) selectDate(d) }; w.appendChild(b)
+      }
+      const nx = new Date(viewMon); nx.setDate(nx.getDate() + 7); $("#wNext").disabled = nx > t
+    }
+    $("#wPrev").onclick = () => { viewMon.setDate(viewMon.getDate() - 7); renderWeek() };
+    $("#wNext").onclick = () => { viewMon.setDate(viewMon.getDate() + 7); renderWeek() };
+    function selectDate(d) {
+      if (busy) return; custom = false; curDate = new Date(d); viewMon = monday(curDate); P = PUZZLES[(curDate.getDay() + 6) % 7];
+      if (paused) resume(); load(P, store.days[key()]); infoLine(); renderWeek()
+    }
+    applySettings();
+  </script>
+  <script src="static/engine-bridge.js?v=13"></script>
+</body>
+
+</html>
