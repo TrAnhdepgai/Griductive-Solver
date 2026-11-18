@@ -131,3 +131,28 @@ from src.logic.evaluator import evaluate_clue
 assignment = {"A1": False, "B1": True, "C1": True, "A2": True, ...}
 is_valid = evaluate_clue(puzzle.clues["B1"], assignment, n=3)
 ```
+
+---
+
+## 🎯 Bộ 6 Test Cases Chính Thức (Official Benchmark Set)
+
+Theo giải đáp của Giảng viên (yêu cầu tối thiểu 6 test cases, mỗi kích thước 2 test cases có **nghiệm duy nhất - unique solution** để phục vụ chức năng Load, Demo Agent và làm Báo cáo):
+
+| Kích thước | Test Case 1 | Test Case 2 | Đặc điểm |
+| :---: | :--- | :--- | :--- |
+| **3×3** | `puzzles/3x3_easy_01.json` | `puzzles/3x3_medium_01.json` | 9 ô, 1 clue ban đầu, nghiệm duy nhất |
+| **4×4** | `puzzles/4x4_easy_01.json` | `puzzles/4x4_medium_01.json` | 16 ô, nghiệm duy nhất, phù hợp demo animate |
+| **5×5** | `puzzles/5x5_medium_01.json` | `puzzles/5x5_hard_01.json` | 25 ô, quy mô lớn, thử thách khả năng suy luận |
+
+*(Ngoài 6 test cases chính thức trên, repo còn có sẵn 18 test cases mở rộng khác trong thư mục `puzzles/` với các cấp độ từ Easy đến Hard).*
+
+---
+
+## 📚 Tài liệu tham khảo (References & Acknowledgements)
+
+1. **Trò chơi gốc Clues By Sam:**
+   - Luật chơi, ý tưởng thẻ bài nhân vật và manh mối suy luận logic được tham khảo từ tựa game suy luận **Clues By Sam** (tác giả: Sam, truy cập tại [cluesbysam.com](https://cluesbysam.com/)).
+2. **Tài liệu môn học:**
+   - Đề cương và hướng dẫn đồ án môn *CSC14003 - Nhập môn Trí tuệ Nhân tạo*, Khoa Công nghệ Thông tin, Trường Đại học Khoa học Tự nhiên, ĐHQG-HCM.
+3. **Mã hóa SAT & Cardinality Constraints:**
+   - Sinz, Carsten (2005). *Towards an Optimal CNF Encoding of Boolean Cardinality Constraints*. CP 2005.
