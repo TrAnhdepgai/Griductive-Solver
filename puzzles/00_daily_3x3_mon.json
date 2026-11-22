@@ -1,0 +1,194 @@
+{
+  "id": "daily_1_mon",
+  "size": 3,
+  "difficulty": "easy",
+  "cells": [
+    {
+      "id": "A1",
+      "row": 1,
+      "col": "A",
+      "name": "Bea",
+      "profession": "Detective"
+    },
+    {
+      "id": "B1",
+      "row": 1,
+      "col": "B",
+      "name": "Jonas",
+      "profession": "Astronaut"
+    },
+    {
+      "id": "C1",
+      "row": 1,
+      "col": "C",
+      "name": "Roy",
+      "profession": "Guard"
+    },
+    {
+      "id": "A2",
+      "row": 2,
+      "col": "A",
+      "name": "Derek",
+      "profession": "Farmer"
+    },
+    {
+      "id": "B2",
+      "row": 2,
+      "col": "B",
+      "name": "Noah",
+      "profession": "Clerk"
+    },
+    {
+      "id": "C2",
+      "row": 2,
+      "col": "C",
+      "name": "Tom",
+      "profession": "Cook"
+    },
+    {
+      "id": "A3",
+      "row": 3,
+      "col": "A",
+      "name": "Hannah",
+      "profession": "Astronaut"
+    },
+    {
+      "id": "B3",
+      "row": 3,
+      "col": "B",
+      "name": "Priya",
+      "profession": "Painter"
+    },
+    {
+      "id": "C3",
+      "row": 3,
+      "col": "C",
+      "name": "Xavier",
+      "profession": "Cook"
+    }
+  ],
+  "solution": {
+    "A1": "INNOCENT",
+    "B1": "INNOCENT",
+    "C1": "INNOCENT",
+    "A2": "CRIMINAL",
+    "B2": "INNOCENT",
+    "C2": "INNOCENT",
+    "A3": "INNOCENT",
+    "B3": "CRIMINAL",
+    "C3": "CRIMINAL"
+  },
+  "initial_revealed": [
+    "A2",
+    "C3"
+  ],
+  "clues": {
+    "A1": {
+      "type": "DIFFERENT",
+      "a": "B2",
+      "b": "B3"
+    },
+    "B1": {
+      "type": "AT_MOST",
+      "region": {
+        "kind": "neighbors",
+        "of": "A1"
+      },
+      "k": 2
+    },
+    "C1": {
+      "type": "AT_MOST",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "A1",
+          "C1",
+          "B2",
+          "C2",
+          "C3"
+        ]
+      },
+      "k": 1
+    },
+    "A2": {
+      "type": "AT_MOST",
+      "region": {
+        "kind": "neighbors",
+        "of": "A2"
+      },
+      "k": 1
+    },
+    "B2": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "neighbors",
+        "of": "A2"
+      },
+      "k": 1
+    },
+    "C2": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "A1",
+          "B1",
+          "C1",
+          "B3",
+          "C3"
+        ]
+      },
+      "k": 2
+    },
+    "A3": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "A1",
+          "A2",
+          "B2",
+          "C2",
+          "A3"
+        ]
+      },
+      "k": 1
+    },
+    "B3": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "B1",
+          "C2"
+        ]
+      },
+      "k": 0
+    },
+    "C3": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "neighbors",
+        "of": "B1"
+      },
+      "k": 1
+    }
+  },
+  "meta": {
+    "seed": 800,
+    "reveal_order": [
+      "A1",
+      "B1",
+      "C1",
+      "B2",
+      "C2",
+      "A3",
+      "B3"
+    ],
+    "extensions": [],
+    "attempt": 1,
+    "mode": "easy",
+    "waves": 2
+  },
+  "weekday": "mon"
+}

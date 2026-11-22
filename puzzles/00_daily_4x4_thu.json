@@ -1,0 +1,297 @@
+{
+  "id": "daily_4_thu",
+  "size": 4,
+  "difficulty": "tricky",
+  "cells": [
+    {
+      "id": "A1",
+      "row": 1,
+      "col": "A",
+      "name": "Clara",
+      "profession": "Farmer"
+    },
+    {
+      "id": "B1",
+      "row": 1,
+      "col": "B",
+      "name": "Ivy",
+      "profession": "Clerk"
+    },
+    {
+      "id": "C1",
+      "row": 1,
+      "col": "C",
+      "name": "Priya",
+      "profession": "Guard"
+    },
+    {
+      "id": "D1",
+      "row": 1,
+      "col": "D",
+      "name": "Victor",
+      "profession": "Clerk"
+    },
+    {
+      "id": "A2",
+      "row": 2,
+      "col": "A",
+      "name": "Eliza",
+      "profession": "Detective"
+    },
+    {
+      "id": "B2",
+      "row": 2,
+      "col": "B",
+      "name": "Jonas",
+      "profession": "Clerk"
+    },
+    {
+      "id": "C2",
+      "row": 2,
+      "col": "C",
+      "name": "Quilla",
+      "profession": "Clerk"
+    },
+    {
+      "id": "D2",
+      "row": 2,
+      "col": "D",
+      "name": "Wendy",
+      "profession": "Farmer"
+    },
+    {
+      "id": "A3",
+      "row": 3,
+      "col": "A",
+      "name": "Franz",
+      "profession": "Clerk"
+    },
+    {
+      "id": "B3",
+      "row": 3,
+      "col": "B",
+      "name": "Leo",
+      "profession": "Astronaut"
+    },
+    {
+      "id": "C3",
+      "row": 3,
+      "col": "C",
+      "name": "Sophia",
+      "profession": "Detective"
+    },
+    {
+      "id": "D3",
+      "row": 3,
+      "col": "D",
+      "name": "Xavier",
+      "profession": "Farmer"
+    },
+    {
+      "id": "A4",
+      "row": 4,
+      "col": "A",
+      "name": "Grant",
+      "profession": "Astronaut"
+    },
+    {
+      "id": "B4",
+      "row": 4,
+      "col": "B",
+      "name": "Noah",
+      "profession": "Guard"
+    },
+    {
+      "id": "C4",
+      "row": 4,
+      "col": "C",
+      "name": "Uma",
+      "profession": "Astronaut"
+    },
+    {
+      "id": "D4",
+      "row": 4,
+      "col": "D",
+      "name": "Yara",
+      "profession": "Clerk"
+    }
+  ],
+  "solution": {
+    "A1": "CRIMINAL",
+    "B1": "INNOCENT",
+    "C1": "CRIMINAL",
+    "D1": "CRIMINAL",
+    "A2": "INNOCENT",
+    "B2": "CRIMINAL",
+    "C2": "INNOCENT",
+    "D2": "INNOCENT",
+    "A3": "INNOCENT",
+    "B3": "INNOCENT",
+    "C3": "INNOCENT",
+    "D3": "CRIMINAL",
+    "A4": "CRIMINAL",
+    "B4": "INNOCENT",
+    "C4": "CRIMINAL",
+    "D4": "CRIMINAL"
+  },
+  "initial_revealed": [
+    "B4",
+    "C4"
+  ],
+  "clues": {
+    "A1": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "B1",
+          "B2"
+        ]
+      },
+      "k": 1
+    },
+    "B1": {
+      "type": "SAME",
+      "a": "A1",
+      "b": "A4"
+    },
+    "C1": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "row",
+        "row": 1
+      },
+      "k": 3
+    },
+    "D1": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "A1",
+          "B2",
+          "A3",
+          "C3",
+          "D3"
+        ]
+      },
+      "k": 3
+    },
+    "A2": {
+      "type": "FACT",
+      "cell": "A1",
+      "status": "CRIMINAL"
+    },
+    "B2": {
+      "type": "FACT",
+      "cell": "A2",
+      "status": "INNOCENT"
+    },
+    "C2": {
+      "type": "FACT",
+      "cell": "A3",
+      "status": "INNOCENT"
+    },
+    "D2": {
+      "type": "AT_LEAST",
+      "region": {
+        "kind": "row",
+        "row": 1
+      },
+      "k": 2
+    },
+    "A3": {
+      "type": "DIFFERENT",
+      "a": "B4",
+      "b": "C1"
+    },
+    "B3": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "C1",
+          "A2",
+          "C2",
+          "D2",
+          "D4"
+        ]
+      },
+      "k": 2
+    },
+    "C3": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "C2",
+          "B4"
+        ]
+      },
+      "k": 0
+    },
+    "D3": {
+      "type": "EXACTLY",
+      "region": {
+        "kind": "row",
+        "row": 4
+      },
+      "k": 3
+    },
+    "A4": {
+      "type": "FACT",
+      "cell": "C3",
+      "status": "INNOCENT"
+    },
+    "B4": {
+      "type": "AT_MOST",
+      "region": {
+        "kind": "row",
+        "row": 1
+      },
+      "k": 3
+    },
+    "C4": {
+      "type": "FACT",
+      "cell": "B2",
+      "status": "CRIMINAL"
+    },
+    "D4": {
+      "type": "AT_MOST",
+      "region": {
+        "kind": "cells",
+        "cells": [
+          "A1",
+          "B3",
+          "A4",
+          "D4"
+        ]
+      },
+      "k": 3
+    }
+  },
+  "meta": {
+    "seed": 1100,
+    "reveal_order": [
+      "B2",
+      "A2",
+      "A1",
+      "B1",
+      "A4",
+      "C3",
+      "C2",
+      "A3",
+      "C1",
+      "D1",
+      "D3",
+      "D4",
+      "B3",
+      "D2"
+    ],
+    "extensions": [],
+    "attempt": 0,
+    "mode": "hard",
+    "waves": 14
+  },
+  "weekday": "thu"
+}
