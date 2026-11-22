@@ -740,6 +740,47 @@
       width: 26px;
       max-width: none
     }
+
+    /* ---- 4x4 / 5x5: make clues readable on small cards ---- */
+    .board-box { position: relative }
+    .cell .inline-clue { scrollbar-width: none }
+    .cell .inline-clue::-webkit-scrollbar { display: none }
+    .cell .inline-clue.clipped {
+      overflow: hidden;
+      cursor: help;
+      -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent);
+      mask-image: linear-gradient(to bottom, #000 62%, transparent)
+    }
+    body[data-n="4"] .cell.has-clue .face,
+    body[data-n="5"] .cell.has-clue .face { padding: 22px 5px 6px }
+    body[data-n="4"] .cell.has-clue .av,
+    body[data-n="5"] .cell.has-clue .av { width: 30%; max-width: 30px; margin-top: 0 }
+    body[data-n="4"] .cell.has-clue .nm,
+    body[data-n="5"] .cell.has-clue .nm { margin: 1px 0; font-size: clamp(11px, 1.4vw, 16px) }
+    @media (min-width: 821px) {
+      body[data-n="4"] .wrap,
+      body[data-n="5"] .wrap { max-width: 1280px }
+      body[data-n="4"] .main,
+      body[data-n="5"] .main { grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr) }
+    }
+    @media (max-width: 600px) {
+      body[data-n="4"] .inline-clue,
+      body[data-n="5"] .inline-clue { display: none }
+    }
+    .clue-pop {
+      position: absolute;
+      z-index: 30;
+      width: min(300px, calc(100% - 16px));
+      padding: 10px 14px 12px;
+      background: #fff;
+      border: var(--rim) solid var(--ink);
+      border-radius: 16px;
+      box-shadow: 0 6px 0 var(--ink);
+      font: 400 16px/1.35 Nokio;
+      pointer-events: none
+    }
+    .clue-pop b { display: block; margin-bottom: 4px; font: 400 18px/1.1 OldStyle }
+    .clue-pop p { margin: 0; overflow-wrap: anywhere }
   </style>
 </head>
 

@@ -31,6 +31,42 @@ draw=function(flipped){
     );}
   });
 };
+// ---- 4x4 / 5x5: keep clues readable on small cards ----
+// 1) shrink the clue text until it fits its card (marks it .clipped if even the minimum is too big)
+// 2) selecting a revealed card shows its full clue in a popup next to it
+function fitClues(){
+  document.querySelectorAll("#board .inline-clue").forEach(note=>{
+    note.style.fontSize="";note.classList.remove("clipped");
+    let fs=parseFloat(getComputedStyle(note).fontSize);
+    while(fs>8&&note.scrollHeight>note.clientHeight+1){fs-=.5;note.style.fontSize=fs+"px";}
+    if(note.clientHeight>0&&note.scrollHeight>note.clientHeight+1)note.classList.add("clipped");
+  });
+}
+function closeCluePop(){const e=document.getElementById("cluePop");if(e)e.remove();}
+function showCluePop(){
+  closeCluePop();
+  if(!sel||!rev[sel]||!P.clues[sel])return;
+  const card=document.querySelector(`#board .cell[data-c="${sel}"]`);
+  const clipped=card&&card.querySelector(".inline-clue.clipped");
+  const hidden=card&&getComputedStyle(card.querySelector(".inline-clue")||card).display==="none";
+  if(!card||!(N>=4||clipped||hidden))return;
+  const box=document.getElementById("board").closest(".board-box"),br=box.getBoundingClientRect(),cr=card.getBoundingClientRect();
+  const pop=document.createElement("div");pop.id="cluePop";pop.className="clue-pop";pop.setAttribute("role","status");
+  const title=document.createElement("b");title.textContent=`${nm(sel)} (${sel})`;
+  const text=document.createElement("p");text.textContent=plainClueText(P.clues[sel]);
+  pop.append(title,text);box.append(pop);
+  const pw=pop.offsetWidth,ph=pop.offsetHeight;
+  let left=cr.left-br.left+cr.width/2-pw/2;left=Math.max(8,Math.min(left,br.width-pw-8));
+  let top=cr.bottom-br.top+8;if(top+ph>br.height-8)top=cr.top-br.top-ph-8;
+  pop.style.left=left+"px";pop.style.top=Math.max(8,top)+"px";
+}
+const drawWithClues=draw;
+draw=function(flipped){drawWithClues(flipped);document.body.dataset.n=N;fitClues();showCluePop();};
+let clueFitFrame=0;
+window.addEventListener("resize",()=>{cancelAnimationFrame(clueFitFrame);clueFitFrame=requestAnimationFrame(()=>{fitClues();showCluePop();});});
+// composedPath(): the clicked card is already re-rendered (detached) when the event reaches document
+document.addEventListener("click",e=>{if(!e.composedPath().some(n=>n.id==="board"))closeCluePop();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeCluePop();});
 $("#clue").closest(".card").hidden=true;
 $(".side").append($("#toast"));
 function acceptEngineState(p,explicitFlip=null){
