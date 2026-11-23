@@ -1,5 +1,124 @@
 [
   {
+    "puzzle": "daily_1_mon",
+    "size": 3,
+    "difficulty": "easy",
+    "status": "OK",
+    "error": "",
+    "primary_vars": 9,
+    "aux_vars": 0,
+    "clauses": 79,
+    "sat_calls": 63,
+    "decisions": 8,
+    "propagations": 451,
+    "backtracks": 0,
+    "steps": 7,
+    "waves": 2,
+    "runtime_s": 0.005758100000093691
+  },
+  {
+    "puzzle": "daily_2_tue",
+    "size": 3,
+    "difficulty": "medium",
+    "status": "OK",
+    "error": "",
+    "primary_vars": 9,
+    "aux_vars": 0,
+    "clauses": 27,
+    "sat_calls": 80,
+    "decisions": 0,
+    "propagations": 350,
+    "backtracks": 0,
+    "steps": 8,
+    "waves": 8,
+    "runtime_s": 0.003946300001189229
+  },
+  {
+    "puzzle": "daily_4_thu",
+    "size": 4,
+    "difficulty": "tricky",
+    "status": "OK",
+    "error": "",
+    "primary_vars": 16,
+    "aux_vars": 0,
+    "clauses": 74,
+    "sat_calls": 224,
+    "decisions": 369,
+    "propagations": 1724,
+    "backtracks": 0,
+    "steps": 14,
+    "waves": 14,
+    "runtime_s": 0.011865999998917687
+  },
+  {
+    "puzzle": "daily_3_wed",
+    "size": 4,
+    "difficulty": "medium",
+    "status": "OK",
+    "error": "",
+    "primary_vars": 16,
+    "aux_vars": 0,
+    "clauses": 397,
+    "sat_calls": 195,
+    "decisions": 349,
+    "propagations": 2245,
+    "backtracks": 22,
+    "steps": 13,
+    "waves": 4,
+    "runtime_s": 0.04936620000080438
+  },
+  {
+    "puzzle": "daily_5_fri",
+    "size": 5,
+    "difficulty": "tricky",
+    "status": "OK",
+    "error": "",
+    "primary_vars": 25,
+    "aux_vars": 0,
+    "clauses": 307,
+    "sat_calls": 528,
+    "decisions": 3139,
+    "propagations": 7667,
+    "backtracks": 0,
+    "steps": 22,
+    "waves": 12,
+    "runtime_s": 0.05346350000036182
+  },
+  {
+    "puzzle": "daily_6_sat",
+    "size": 5,
+    "difficulty": "hard",
+    "status": "OK",
+    "error": "",
+    "primary_vars": 25,
+    "aux_vars": 0,
+    "clauses": 241,
+    "sat_calls": 528,
+    "decisions": 2800,
+    "propagations": 5990,
+    "backtracks": 0,
+    "steps": 22,
+    "waves": 20,
+    "runtime_s": 0.050270900001123664
+  },
+  {
+    "puzzle": "daily_7_sun",
+    "size": 5,
+    "difficulty": "evil",
+    "status": "OK",
+    "error": "",
+    "primary_vars": 25,
+    "aux_vars": 0,
+    "clauses": 153,
+    "sat_calls": 575,
+    "decisions": 1044,
+    "propagations": 5992,
+    "backtracks": 0,
+    "steps": 23,
+    "waves": 23,
+    "runtime_s": 0.03625429999920016
+  },
+  {
     "puzzle": "3x3_easy_01",
     "size": 3,
     "difficulty": "easy",
@@ -14,7 +133,7 @@
     "backtracks": 0,
     "steps": 8,
     "waves": 2,
-    "runtime_s": 0.00580189999891445
+    "runtime_s": 0.006752199999027653
   },
   {
     "puzzle": "3x3_easy_02",
@@ -31,7 +150,7 @@
     "backtracks": 0,
     "steps": 8,
     "waves": 2,
-    "runtime_s": 0.00582850000137114
+    "runtime_s": 0.005633199998555938
   },
   {
     "puzzle": "3x3_easy_03",
@@ -48,7 +167,7 @@
     "backtracks": 0,
     "steps": 8,
     "waves": 2,
-    "runtime_s": 0.005868299998837756
+    "runtime_s": 0.006099700000049779
   },
   {
     "puzzle": "3x3_hard_01",
@@ -65,7 +184,7 @@
     "backtracks": 0,
     "steps": 8,
     "waves": 8,
-    "runtime_s": 0.004562299998724484
+    "runtime_s": 0.004777100000865175
   },
   {
     "puzzle": "3x3_hard_02",
@@ -82,7 +201,7 @@
     "backtracks": 0,
     "steps": 8,
     "waves": 8,
-    "runtime_s": 0.005106700000396813
+    "runtime_s": 0.0046392999993258854
   },
   {
     "puzzle": "3x3_hard_03",
@@ -99,7 +218,7 @@
     "backtracks": 0,
     "steps": 8,
     "waves": 8,
-    "runtime_s": 0.0040650000009918585
+    "runtime_s": 0.003898700000718236
   },
   {
     "puzzle": "3x3_medium_01",
@@ -116,7 +235,7 @@
     "backtracks": 0,
     "steps": 8,
     "waves": 5,
-    "runtime_s": 0.004541199999948731
+    "runtime_s": 0.004693299999416922
   },
   {
     "puzzle": "3x3_medium_02",
@@ -133,7 +252,7 @@
     "backtracks": 0,
     "steps": 8,
     "waves": 4,
-    "runtime_s": 0.005302900000970112
+    "runtime_s": 0.005278300001009484
   },
   {
     "puzzle": "3x3_medium_03",
@@ -150,7 +269,7 @@
     "backtracks": 0,
     "steps": 8,
     "waves": 3,
-    "runtime_s": 0.0058589000000210945
+    "runtime_s": 0.006040000000211876
   },
   {
     "puzzle": "4x4_easy_01",
@@ -167,7 +286,7 @@
     "backtracks": 0,
     "steps": 14,
     "waves": 1,
-    "runtime_s": 0.03328719999990426
+    "runtime_s": 0.03542850000121689
   },
   {
     "puzzle": "4x4_easy_02",
@@ -184,7 +303,7 @@
     "backtracks": 11,
     "steps": 14,
     "waves": 1,
-    "runtime_s": 0.03459130000010191
+    "runtime_s": 0.04093959999954677
   },
   {
     "puzzle": "4x4_easy_03",
@@ -201,7 +320,7 @@
     "backtracks": 0,
     "steps": 14,
     "waves": 2,
-    "runtime_s": 0.017545400000017253
+    "runtime_s": 0.02638410000145086
   },
   {
     "puzzle": "4x4_hard_01",
@@ -218,7 +337,7 @@
     "backtracks": 0,
     "steps": 14,
     "waves": 14,
-    "runtime_s": 0.01300219999939145
+    "runtime_s": 0.013051500000074157
   },
   {
     "puzzle": "4x4_hard_02",
@@ -235,7 +354,7 @@
     "backtracks": 0,
     "steps": 14,
     "waves": 11,
-    "runtime_s": 0.012949700001627207
+    "runtime_s": 0.014750099999218946
   },
   {
     "puzzle": "4x4_hard_03",
@@ -252,7 +371,7 @@
     "backtracks": 0,
     "steps": 14,
     "waves": 14,
-    "runtime_s": 0.015660099999877275
+    "runtime_s": 0.014151999999739928
   },
   {
     "puzzle": "4x4_hard_04",
@@ -269,7 +388,7 @@
     "backtracks": 0,
     "steps": 14,
     "waves": 14,
-    "runtime_s": 0.013635799999974552
+    "runtime_s": 0.013707100000829087
   },
   {
     "puzzle": "4x4_medium_01",
@@ -286,7 +405,7 @@
     "backtracks": 0,
     "steps": 14,
     "waves": 1,
-    "runtime_s": 0.02561220000097819
+    "runtime_s": 0.032520900000236
   },
   {
     "puzzle": "4x4_medium_02",
@@ -303,7 +422,7 @@
     "backtracks": 0,
     "steps": 14,
     "waves": 4,
-    "runtime_s": 0.014837400000033085
+    "runtime_s": 0.01603620000059891
   },
   {
     "puzzle": "4x4_medium_03",
@@ -320,7 +439,7 @@
     "backtracks": 0,
     "steps": 14,
     "waves": 2,
-    "runtime_s": 0.020223399998940295
+    "runtime_s": 0.02248169999984384
   },
   {
     "puzzle": "4x4_medium_04",
@@ -337,7 +456,7 @@
     "backtracks": 19,
     "steps": 14,
     "waves": 2,
-    "runtime_s": 0.017232600001079845
+    "runtime_s": 0.01641639999979816
   },
   {
     "puzzle": "5x5_hard_01",
@@ -354,7 +473,7 @@
     "backtracks": 0,
     "steps": 22,
     "waves": 20,
-    "runtime_s": 0.041059300001506926
+    "runtime_s": 0.04062369999883231
   },
   {
     "puzzle": "5x5_hard_02",
@@ -371,7 +490,7 @@
     "backtracks": 0,
     "steps": 22,
     "waves": 19,
-    "runtime_s": 0.04016770000089309
+    "runtime_s": 0.04758100000071863
   },
   {
     "puzzle": "5x5_medium_01",
@@ -388,7 +507,7 @@
     "backtracks": 147,
     "steps": 22,
     "waves": 7,
-    "runtime_s": 0.06841889999850537
+    "runtime_s": 0.06824959999903513
   },
   {
     "puzzle": "5x5_medium_02",
@@ -405,6 +524,6 @@
     "backtracks": 0,
     "steps": 22,
     "waves": 11,
-    "runtime_s": 0.03775630000018282
+    "runtime_s": 0.04549409999890486
   }
 ]
