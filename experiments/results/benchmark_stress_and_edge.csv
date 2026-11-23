@@ -1,0 +1,6 @@
+puzzle,size,difficulty,status,primary_vars,aux_vars,clauses,sat_calls,decisions,propagations,backtracks,steps,waves,runtime_s,error
+3x3_hard_901,3,hard,OK,9,8,65,44,0,285,0,8,8,0.006456499999330845,
+4x4_hard_902,4,hard,OK,16,2,209,119,351,974,0,14,12,0.02598960000068473,
+5x5_hard_903,5,hard,OK,25,39,1046,261,1254,7889,4,22,19,0.22467780000079074,
+edge_inconsistent_3x3,3,edge_inconsistent,FAIL,9,0,2,1,0,1,0,0,0,0.0002181999989261385,
+edge_stuck_4x4,4,edge_stuck,FAIL,16,0,1,16,0,16,0,0,0,0.00046180000026652124,

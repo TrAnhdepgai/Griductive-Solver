@@ -14,7 +14,7 @@
     "backtracks": 0,
     "steps": 8,
     "waves": 2,
-    "runtime_s": 0.008856899999955203
+    "runtime_s": 0.00507859999925131
   },
   {
     "puzzle": "3x3_easy_02",
@@ -31,7 +31,7 @@
     "backtracks": 0,
     "steps": 8,
     "waves": 2,
-    "runtime_s": 0.008720300000277348
+    "runtime_s": 0.004913899998427951
   },
   {
     "puzzle": "3x3_easy_03",
@@ -48,7 +48,7 @@
     "backtracks": 0,
     "steps": 8,
     "waves": 2,
-    "runtime_s": 0.00847060000160127
+    "runtime_s": 0.005765100000644452
   },
   {
     "puzzle": "3x3_hard_01",
@@ -65,7 +65,7 @@
     "backtracks": 0,
     "steps": 8,
     "waves": 8,
-    "runtime_s": 0.006634500001382548
+    "runtime_s": 0.004216999999698601
   },
   {
     "puzzle": "3x3_hard_02",
@@ -82,7 +82,7 @@
     "backtracks": 0,
     "steps": 8,
     "waves": 8,
-    "runtime_s": 0.007557999997516163
+    "runtime_s": 0.004833499999222113
   },
   {
     "puzzle": "3x3_hard_03",
@@ -99,7 +99,7 @@
     "backtracks": 0,
     "steps": 8,
     "waves": 8,
-    "runtime_s": 0.007624800000485266
+    "runtime_s": 0.0035683999994944315
   },
   {
     "puzzle": "3x3_medium_01",
@@ -116,7 +116,7 @@
     "backtracks": 0,
     "steps": 8,
     "waves": 5,
-    "runtime_s": 0.007242600000608945
+    "runtime_s": 0.004170799998973962
   },
   {
     "puzzle": "3x3_medium_02",
@@ -133,7 +133,7 @@
     "backtracks": 0,
     "steps": 8,
     "waves": 4,
-    "runtime_s": 0.006874300001072697
+    "runtime_s": 0.004966300000887713
   },
   {
     "puzzle": "3x3_medium_03",
@@ -150,7 +150,7 @@
     "backtracks": 0,
     "steps": 8,
     "waves": 3,
-    "runtime_s": 0.007210799998574657
+    "runtime_s": 0.005321700000422425
   },
   {
     "puzzle": "4x4_easy_01",
@@ -167,7 +167,7 @@
     "backtracks": 0,
     "steps": 14,
     "waves": 1,
-    "runtime_s": 0.05414100000052713
+    "runtime_s": 0.028301199999987148
   },
   {
     "puzzle": "4x4_easy_02",
@@ -184,7 +184,7 @@
     "backtracks": 11,
     "steps": 14,
     "waves": 1,
-    "runtime_s": 0.04328389999864157
+    "runtime_s": 0.02967779999926279
   },
   {
     "puzzle": "4x4_easy_03",
@@ -201,7 +201,7 @@
     "backtracks": 0,
     "steps": 14,
     "waves": 2,
-    "runtime_s": 0.02241870000216295
+    "runtime_s": 0.01901949999955832
   },
   {
     "puzzle": "4x4_hard_01",
@@ -218,7 +218,7 @@
     "backtracks": 0,
     "steps": 14,
     "waves": 14,
-    "runtime_s": 0.016952500001934823
+    "runtime_s": 0.012093500001356006
   },
   {
     "puzzle": "4x4_hard_02",
@@ -235,7 +235,7 @@
     "backtracks": 0,
     "steps": 14,
     "waves": 11,
-    "runtime_s": 0.014948799998819595
+    "runtime_s": 0.01081259999955364
   },
   {
     "puzzle": "4x4_hard_03",
@@ -252,7 +252,7 @@
     "backtracks": 0,
     "steps": 14,
     "waves": 14,
-    "runtime_s": 0.014474499999778345
+    "runtime_s": 0.011854500000481494
   },
   {
     "puzzle": "4x4_hard_04",
@@ -269,7 +269,7 @@
     "backtracks": 0,
     "steps": 14,
     "waves": 14,
-    "runtime_s": 0.014256700000260025
+    "runtime_s": 0.011990400000286172
   },
   {
     "puzzle": "4x4_medium_01",
@@ -286,7 +286,7 @@
     "backtracks": 0,
     "steps": 14,
     "waves": 1,
-    "runtime_s": 0.027474200000142446
+    "runtime_s": 0.02096219999839377
   },
   {
     "puzzle": "4x4_medium_02",
@@ -303,7 +303,7 @@
     "backtracks": 0,
     "steps": 14,
     "waves": 4,
-    "runtime_s": 0.025125299998762785
+    "runtime_s": 0.014027600000190432
   },
   {
     "puzzle": "4x4_medium_03",
@@ -320,7 +320,7 @@
     "backtracks": 0,
     "steps": 14,
     "waves": 2,
-    "runtime_s": 0.025731900001119357
+    "runtime_s": 0.016855300000315765
   },
   {
     "puzzle": "4x4_medium_04",
@@ -337,7 +337,7 @@
     "backtracks": 9,
     "steps": 14,
     "waves": 2,
-    "runtime_s": 0.018258399999467656
+    "runtime_s": 0.015151200001128018
   },
   {
     "puzzle": "5x5_hard_01",
@@ -354,7 +354,7 @@
     "backtracks": 0,
     "steps": 22,
     "waves": 20,
-    "runtime_s": 0.04319899999973131
+    "runtime_s": 0.03557410000030359
   },
   {
     "puzzle": "5x5_hard_02",
@@ -371,7 +371,7 @@
     "backtracks": 0,
     "steps": 22,
     "waves": 19,
-    "runtime_s": 0.06618969999908586
+    "runtime_s": 0.038441900000179885
   },
   {
     "puzzle": "5x5_medium_01",
@@ -388,7 +388,7 @@
     "backtracks": 49,
     "steps": 22,
     "waves": 7,
-    "runtime_s": 0.07219889999760198
+    "runtime_s": 0.05722100000093633
   },
   {
     "puzzle": "5x5_medium_02",
@@ -405,6 +405,6 @@
     "backtracks": 0,
     "steps": 22,
     "waves": 11,
-    "runtime_s": 0.0395712999998068
+    "runtime_s": 0.029949399999168236
   }
 ]
