@@ -1,9 +1,10 @@
-# Griductive Solver Dependencies
-# Logic Core (Part A) and DPLL Solver (Part B) require standard library.
-# Member D's verification and benchmark tools require numpy:
+# Griductive Solver dependencies
+#
+# Logic core (src/logic), DPLL solver (src/sat), agent (src/agent) and the web GUI
+# server (src/engine) use only the Python standard library (Python 3.9+).
+
+# Member D's tools (puzzle generation, verification, benchmark) need numpy:
 numpy>=1.24.0
 
-# Optional dependencies for testing and GUI:
+# Optional: run tests with pytest (the built-in runner `python tests/run_tests.py` needs nothing)
 pytest>=7.4.0
-tkintermapview>=1.0.0
-customtkinter>=5.2.0
