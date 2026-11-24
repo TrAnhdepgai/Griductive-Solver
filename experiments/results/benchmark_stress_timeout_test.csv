@@ -1,0 +1,2 @@
+puzzle,size,difficulty,status,primary_vars,aux_vars,clauses,sat_calls,decisions,propagations,backtracks,steps,waves,runtime_s,error
+5x5_hard_903,5,hard,TIMEOUT,,,,,,,,,,,
