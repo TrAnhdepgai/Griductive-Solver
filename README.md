@@ -47,14 +47,20 @@ Hệ thống giải trò chơi suy luận lưới (grid-deduction game **Griduct
 ```text
 Griductive-Solver/
 ├── README.md
+├── THIRD_PARTY_LICENSES.md         # Giấy phép của thư viện/icon/font bên thứ ba
 ├── requirements.txt
+├── .gitignore
 ├── docs/
 │   ├── part_a_report.md            # Báo cáo kỹ thuật Phần A (Logic core)
 │   └── part_b_sat_agent.md         # Báo cáo kỹ thuật Phần B (DPLL + Agent)
 ├── gui/                            # === PHẦN C: giao diện web ===
 │   ├── index.html
 │   ├── README.md
-│   └── static/                     # avatar.js, engine-bridge.js (gọi API), fonts/, icons/
+│   ├── avatar-build/               # Nguồn avatar (BeanHead), build ra static/avatar.js
+│   │   ├── package.json
+│   │   ├── build.mjs
+│   │   └── src/avatar-bean.mjs
+│   └── static/                     # avatar.js (file BUILD, không sửa tay), engine-bridge.js (gọi API), fonts/, icons/
 ├── puzzles/                        # 31 puzzle: 24 bộ chuẩn + 7 puzzle "daily"
 │   ├── {3x3,4x4,5x5}_{easy,medium,hard}_NN.json
 │   └── 00_daily_*.json             # 7 puzzle theo thứ trong tuần, độ khó tăng dần T2 → CN
@@ -106,7 +112,7 @@ Yêu cầu **Python 3.9+**. Chạy mọi lệnh từ **thư mục gốc của re
 pip install -r requirements.txt
 ```
 
-> Lõi logic, DPLL, agent và GUI chỉ dùng thư viện chuẩn của Python. `numpy` chỉ cần cho các công cụ của D (`tools/`).
+> Lõi logic, DPLL, agent và GUI chỉ dùng thư viện chuẩn của Python. `numpy` chỉ cần cho các công cụ của D (`tools/`). **Node.js không bắt buộc** để chạy game, chỉ cần khi muốn sửa avatar (xem mục "Tùy chỉnh avatar").
 
 ### 1. Chạy GUI (chơi và demo)
 
@@ -125,8 +131,31 @@ Chức năng chính:
 - **Chọn một clue đã lật** để highlight các ô mà clue nhắc tới.
 - **Hint** (chỉ ra một ô ép được và clue liên quan), **Từng bước**, **Tự giải** (agent chạy từng bước), **Chơi lại**, **Tải puzzle**.
 - **Lịch theo ngày:** mỗi thứ trong tuần là một puzzle (7 file `00_daily_*`), độ khó tăng từ Thứ Hai đến Chủ Nhật. Có đồng hồ, cài đặt và thông báo tạm dừng khi chuyển tab.
+- **Avatar nhân vật:** mỗi nhân vật có avatar riêng (BeanHead), sinh cố định theo tên và id. Thẻ tội phạm đeo kính đen và khẩu trang, vẻ mặt khác với thẻ vô tội.
 
 API của server (chi tiết trong `src/engine/gui_server.py`): `GET /api/puzzles`, `GET /api/state`, `POST /api/start`, `/api/call`, `/api/hint`, `/api/step`, `/api/reset`.
+
+### 1b. Tùy chỉnh avatar (chỉ khi muốn sửa)
+
+Avatar dùng thư viện [BeanHead](https://www.npmjs.com/package/beanheads) (gói `beanheads`, là component React). Để GUI vẫn là JavaScript thuần, nguồn avatar được gói bằng esbuild thành một file duy nhất `gui/static/avatar.js` (vẫn giữ hàm `window.avatar(id, name, look, status)`, nên `index.html` và `engine-bridge.js` không phải sửa).
+
+File `gui/static/avatar.js` **đã được build sẵn và commit cùng repo**, nên chạy game không cần cài gì thêm. Chỉ khi sửa `gui/avatar-build/src/avatar-bean.mjs` (đổi kiểu tóc, biểu cảm, độ phóng to...) thì mới cần Node.js (bản LTS) và build lại:
+
+```bash
+cd gui/avatar-build
+npm install
+npm run build        # ghi đè gui/static/avatar.js
+```
+
+Sau đó tải lại trang bằng **Ctrl + F5** để xóa cache trình duyệt.
+
+Một số điểm cần biết:
+- **Đừng sửa tay** `gui/static/avatar.js` (file đã nén), mọi chỉnh sửa làm trong `avatar-bean.mjs` rồi build lại.
+- Các hằng số hay chỉnh nằm đầu file `avatar-bean.mjs`: `ZOOM` và `ZOOM_TOP_BIAS` (phóng vào đầu để thấy rõ kính và khẩu trang), các danh sách kiểu tóc, màu da, màu môi, biểu cảm theo phe.
+- Tên giá trị của BeanHead có thể khác giữa các phiên bản. Khi trang tải, code tự thử và **bỏ qua giá trị không hợp lệ**, đồng thời in cảnh báo vàng `[avatar] giá trị "..." không hợp lệ` trong Console (F12). Thấy cảnh báo thì xóa giá trị đó khỏi danh sách tương ứng rồi build lại.
+- Nếu một tổ hợp vẫn lỗi, avatar chuyển sang bản dự phòng đơn giản thay vì làm sập game (Console in `BeanHead lỗi với props này`).
+- Bản build có kèm React nên file `avatar.js` khá nặng (vài trăm KB), đây là điều bình thường.
+- BeanHead dùng giấy phép MIT, xem mục "Giấy phép bên thứ ba" bên dưới.
 
 ### 2. Chạy agent trên dòng lệnh (xem trace suy diễn)
 
@@ -197,6 +226,7 @@ Mỗi file trong `puzzles/` có dạng (mô tả đầy đủ ở `tools/README_
 - 6 clue lõi: `FACT`, `SAME`, `DIFFERENT`, `EXACTLY`, `AT_LEAST`, `AT_MOST`. Extension: `PARITY`, `COMPARE` (và vùng nâng cao trong `src/logic/extensions.py`).
 - Vùng: `row`, `column`, `neighbors`, `cells`.
 - `solution` chỉ dành cho Game Engine; Logic Agent không bao giờ nhìn thấy.
+- Avatar mặc định sinh tự động từ tên và id. Nếu muốn tự chọn ngoại hình cho một nhân vật, thêm trường tùy chọn `look` (ví dụ `gender`, `skin`, `hair`, `hairColor`, `outfit`, `outfitColor`) vào nhân vật đó, giá trị phải thuộc danh sách mà BeanHead hỗ trợ.
 
 ---
 
@@ -252,9 +282,22 @@ Ngoài 6 test case trên, thư mục `puzzles/` còn các puzzle mở rộng (đ
 
 ---
 
+## 📄 Giấy phép bên thứ ba
+
+Dự án dùng các thành phần sau. Đây là đồ án học tập, **không dùng cho mục đích kinh doanh**. Nội dung giấy phép đầy đủ nằm trong [`THIRD_PARTY_LICENSES.md`](THIRD_PARTY_LICENSES.md).
+
+| Thành phần | Vị trí | Giấy phép | Ghi chú |
+|---|---|---|---|
+| **BeanHead** (avatar nhân vật), tác giả Robert Broersma | `gui/avatar-build/`, đã gói vào `gui/static/avatar.js` | [MIT](https://opensource.org/license/mit) | Giữ nguyên thông báo bản quyền và nội dung giấy phép khi phân phối lại |
+| **Streamline Stickies** (bộ icon giao diện) | `gui/static/icons/` | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | Phải ghi công tác giả, dẫn link giấy phép, và nêu rõ nếu có chỉnh sửa icon |
+| **Font** Kermel, Nokio, iCielBC Old Style | `gui/static/fonts/` | Tác giả cho phép sử dụng với mục đích **phi thương mại** | Chỉ dùng trong phạm vi học tập, không dùng để kinh doanh |
+
+---
+
 ## 📚 Tài liệu tham khảo
 
 1. **Trò chơi gốc:** Griductive trên Knotwise (<https://knotwise.games/games/griductive>) và tựa game suy luận **Clues By Sam** (<https://cluesbysam.com/>), nguồn tham khảo luật chơi, ý tưởng thẻ nhân vật và clue.
 2. **Tài liệu môn học:** Đề và hướng dẫn đồ án *CSC14003 - Nhập môn Trí tuệ Nhân tạo*, Khoa Công nghệ Thông tin, ĐH Khoa học Tự nhiên, ĐHQG-HCM.
 3. **Mã hóa cardinality constraints:** Sinz, C. (2005). *Towards an Optimal CNF Encoding of Boolean Cardinality Constraints*. CP 2005.
-4. **Giao diện:** font (Kermel, Nokio, iCielBC Old Style) và bộ icon Streamline Stickies do thành viên C sử dụng, ghi rõ nguồn và giấy phép trong báo cáo.
+4. **Giao diện:** font (Kermel, Nokio, iCielBC Old Style, tác giả cho phép dùng phi thương mại) và bộ icon Streamline Stickies (CC BY 4.0, <https://creativecommons.org/licenses/by/4.0/>).
+5. **Avatar nhân vật:** thư viện BeanHead của Robert Broersma (gói npm `beanheads`, <https://www.npmjs.com/package/beanheads>), giấy phép MIT.

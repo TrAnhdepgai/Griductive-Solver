@@ -102,7 +102,7 @@ draw=function(flipped){
   board.querySelectorAll(".cell").forEach(card=>{
     card.classList.remove("hint-marked","hint-person","hint-target","focus-card","dimmed");card.style.removeProperty("--border-left");card.style.removeProperty("--border-right");
     const c=card.dataset.c,roles=[];
-    if(hintColorGroups.people.has(c)){roles.push("#D97706");card.classList.add("hint-person");}
+    if(hintColorGroups.people.has(c)){roles.push("#78B987");card.classList.add("hint-person");}
     if(hintColorGroups.first.has(c))roles.push("#FF4D94");
     if(hintColorGroups.second.has(c))roles.push("#26B5D2");
     if(active&&roles.length){card.classList.add("hint-marked");card.style.setProperty("--border-left",roles[0]);card.style.setProperty("--border-right",roles[1]||roles[0]);}

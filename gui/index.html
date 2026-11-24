@@ -26,9 +26,9 @@
       --dot: #f3dfb8;
       --ink: #231f20;
       --cream: #fff6e5;
-      --pink: #ff5fa8;
-      --yellow: #ffe236;
-      --cyan: #4cecff;
+      --pink: #f9d79f;
+      --yellow: #f9e46f;
+      --cyan: #aff6fe;
       --paper: #fffdf6;
       --rim: 4px
     }
@@ -181,7 +181,9 @@
       color: inherit
     }
 
-    .cell { transition: opacity .15s ease; }
+    .cell {
+      transition: opacity .15s ease;
+    }
 
     .face {
       position: absolute;
@@ -313,9 +315,17 @@
       animation: pulse 1s infinite alternate;
     }
 
-    .cell.hint-marked.down .face { --card-bg: #fff3cf; }
-    .cell.hint-marked.C .face { --card-bg: var(--pink); }
-    .cell.hint-marked.I .face { --card-bg: var(--cyan); }
+    .cell.hint-marked.down .face {
+      --card-bg: #fff3cf;
+    }
+
+    .cell.hint-marked.C .face {
+      --card-bg: var(--pink);
+    }
+
+    .cell.hint-marked.I .face {
+      --card-bg: var(--cyan);
+    }
 
     .cell.hint-marked::after {
       content: "";
@@ -332,19 +342,32 @@
     }
 
     #board.hint-active .cell.dimmed {
-      opacity: .35;
+      opacity: 1;
     }
 
     #board.hint-active .cell.dimmed .face {
-      border: 3.5px solid #B0ABA0;
+      filter: saturate(.4) brightness(1.1);
     }
 
     .cell.hint-target .face {
       box-shadow: 0 6px 0 var(--ink), 0 0 0 2px #1A1A1A;
     }
 
+    .cell.hint-person {
+      --border-left: #d672f2;
+      --border-right: #d672f2;
+    }
+
+    .cell.hint-person .face {
+      border: 3.5px solid #141715;
+      box-shadow: 0 10px 0 var(--ink), 0 0 0 5px #d672f2;
+      /* vòng ngoài cho nổi lên */
+      transform: translateY(-3px);
+      /* nhấc nhẹ lên */
+    }
+
     .cell.hint-person .nm {
-      color: #1A1A1A;
+      color: #e350f4;
       font-weight: 700;
     }
 
@@ -359,15 +382,37 @@
       color: #1A1A1A;
     }
 
+    .hint-character-text {
+      color: #d34df1;
+      background: none;
+      border: 0;
+      padding: 0;
+      border-radius: 0;
+      -webkit-text-stroke: 0.5px #1A1A1A;
+      paint-order: stroke fill;
+      text-shadow:
+        -0.5px -0.5px 0 #1A1A1A,
+        1px -0.5px 0 #1A1A1A,
+        -0.5px 1px 0 #1A1A1A,
+        1px 1px 0 #1A1A1A;
+    }
+
     .cell.hint-marked:hover .face,
     .cell.hint-marked:focus-visible .face {
       box-shadow: 0 8px 0 var(--ink), 0 0 0 2px #1A1A1A;
     }
 
-    .cell.sel .face { box-shadow: 0 4px 0 var(--ink), 0 0 0 1px #1A1A1A; }
+    .cell.sel .face {
+      box-shadow: 0 4px 0 var(--ink), 0 0 0 1px #1A1A1A;
+    }
 
-    .cell.sel:not(.hint-marked) .face { border: 4px solid #FFD60A; }
-    .cell.focus-card .face { box-shadow: 0 4px 0 var(--ink), 0 0 0 1px #1A1A1A; }
+    .cell.sel:not(.hint-marked) .face {
+      border: 4px solid #fee97f;
+    }
+
+    .cell.focus-card .face {
+      box-shadow: 0 4px 0 var(--ink), 0 0 0 1px #1A1A1A;
+    }
 
     @keyframes pulse {
       to {
@@ -803,31 +848,67 @@
     }
 
     /* ---- 4x4 / 5x5: make clues readable on small cards ---- */
-    .board-box { position: relative }
-    .cell .inline-clue { scrollbar-width: none }
-    .cell .inline-clue::-webkit-scrollbar { display: none }
+    .board-box {
+      position: relative
+    }
+
+    .cell .inline-clue {
+      scrollbar-width: none
+    }
+
+    .cell .inline-clue::-webkit-scrollbar {
+      display: none
+    }
+
     .cell .inline-clue.clipped {
       overflow: hidden;
       cursor: help;
       -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent);
       mask-image: linear-gradient(to bottom, #000 62%, transparent)
     }
+
     body[data-n="4"] .cell.has-clue .face,
-    body[data-n="5"] .cell.has-clue .face { padding: 22px 5px 6px }
-    body[data-n="4"] .cell.has-clue .av,
-    body[data-n="5"] .cell.has-clue .av { width: 30%; max-width: 30px; margin-top: 0 }
+    body[data-n="5"] .cell.has-clue .face {
+      padding: 22px 5px 6px
+    }
+
+    body[data-n="4"] .cell.has-clue .av {
+      width: 44%;
+      max-width: 60px;
+    }
+
+    body[data-n="5"] .cell.has-clue .av {
+      width: 38%;
+      max-width: 48px;
+    }
+
     body[data-n="4"] .cell.has-clue .nm,
-    body[data-n="5"] .cell.has-clue .nm { margin: 1px 0; font-size: clamp(11px, 1.4vw, 16px) }
+    body[data-n="5"] .cell.has-clue .nm {
+      margin: 1px 0;
+      font-size: clamp(11px, 1.4vw, 16px)
+    }
+
     @media (min-width: 821px) {
+
       body[data-n="4"] .wrap,
-      body[data-n="5"] .wrap { max-width: 1280px }
+      body[data-n="5"] .wrap {
+        max-width: 1280px
+      }
+
       body[data-n="4"] .main,
-      body[data-n="5"] .main { grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr) }
+      body[data-n="5"] .main {
+        grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr)
+      }
     }
+
     @media (max-width: 600px) {
+
       body[data-n="4"] .inline-clue,
-      body[data-n="5"] .inline-clue { display: none }
+      body[data-n="5"] .inline-clue {
+        display: none
+      }
     }
+
     .clue-pop {
       position: absolute;
       z-index: 30;
@@ -840,8 +921,17 @@
       font: 400 16px/1.35 Nokio;
       pointer-events: none
     }
-    .clue-pop b { display: block; margin-bottom: 4px; font: 400 18px/1.1 OldStyle }
-    .clue-pop p { margin: 0; overflow-wrap: anywhere }
+
+    .clue-pop b {
+      display: block;
+      margin-bottom: 4px;
+      font: 400 18px/1.1 OldStyle
+    }
+
+    .clue-pop p {
+      margin: 0;
+      overflow-wrap: anywhere
+    }
   </style>
 </head>
 
