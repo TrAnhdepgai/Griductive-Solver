@@ -1031,30 +1031,195 @@
         <div id="toast"></div>
       </aside>
     </div>
-    <section class="about">
+    <section class="about" id="about">
+
       <div class="eyebrow">Giới thiệu</div>
       <h2>Griductive, câu đố suy luận trên lưới</h2>
-      <p>Mỗi người trên lưới là tội phạm hoặc vô tội, và chỉ có đúng một cách sắp xếp thỏa mọi manh mối.
-        Bạn tìm ra từng người một bằng suy luận chắc chắn, không được đoán mò.</p>
+      <p>Mỗi người trên lưới đều bí mật là tội phạm hoặc vô tội, và chỉ có đúng một cách sắp xếp thỏa mọi manh mối trên
+        bàn.
+        Nhiệm vụ của người chơi là tìm ra từng người một. Điều khiến Griductive khác với nhiều trò suy luận khác là người chơi
+        <b>không thể đoán mò</b>:
+        bàn chơi sẽ không nhận một verdict mà bạn chưa chứng minh được.</p>
+
+      <div class="eyebrow">Cách chơi</div>
+      <h2>Từ thẻ úp đến lời giải</h2>
+      <ol class="steps">
+        <li><b>Chọn một thẻ.</b> Thẻ đã lật cho người chơi đọc manh mối của nhân vật đó, và người chơi sẽ lật những thẻ chưa xác định lên.</li>
+        <li><b>Gọi tên khi bạn đã chắc chắn.</b> Chọn <i>Tội phạm</i> hoặc <i>Vô tội</i> cho một thẻ úp.</li>
+        <li><b>Nếu đúng và chứng minh được</b>, thẻ lật lên và lộ ra manh mối mới của nhân vật đó.</li>
+        <li><b>Nếu sai</b>, hệ thống sẽ báo lý do: <i>chưa đủ căn cứ</i> (suy luận chưa ép được) hoặc <i>mâu thuẫn</i> (các manh
+          mối suy ra điều ngược lại). Thẻ không lật.</li>
+        <li><b>Lặp lại</b> cho đến khi lật hết bàn. Đồng hồ sẽ chạy từ lúc người chơi bắt đầu.</li>
+      </ol>
+      <p>Người chơi có thể chọn một thẻ đã lật để làm sáng các ô mà manh mối đó nhắc tới, giúp nhìn ra mối liên hệ nhanh hơn.
+      </p>
 
       <div class="eyebrow">Mở đầu</div>
       <h2>Bắt đầu từ đâu?</h2>
       <ul>
-        <li><b>Bắt đầu từ manh mối hẹp nhất.</b> Câu nhắc đến ít người nhất thì ràng buộc chặt nhất.</li>
-        <li><b>Mỗi lần lật thẻ, đọc lại mọi manh mối.</b> Thông tin mới thường có ích ở chỗ khác trên bàn.</li>
-        <li><b>Bí nghĩa là chưa đọc kỹ, không phải kém may.</b> Hãy dùng nút Gợi ý nếu cần.</li>
+        <li><b>Hãy quan sát toàn bộ màn chơi trước.</b> Người trông thú vị thường không phải người mà manh mối đã
+          quyết định sẵn.</li>
+        <li><b>Bắt đầu từ manh mối hẹp nhất.</b> Câu nhắc tới ít người nhất ràng buộc chặt nhất. Một câu về một người
+          hàng xóm có giá trị hơn một câu về cả hàng.</li>
+        <li><b>Mỗi lần lật thẻ, đọc lại mọi manh mối.</b> Thông tin mới thường có ích ở một chỗ khác trên bàn.</li>
+        <li><b>Bí nghĩa là chưa đọc kỹ, không phải kém may.</b> Không có chuyện người chơi "hên xui may rủi". Nếu chưa xác định được, hãy
+          xem lại các manh mối đã lật hoặc dùng nút <i>Gợi ý</i>.</li>
       </ul>
+
+      <div class="eyebrow">Manh mối</div>
+      <h2>Các loại manh mối</h2>
+      <p>Mỗi manh mối là một câu nói về một nhóm người. Dưới đây là các loại người chơi sẽ gặp.</p>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Loại</th>
+              <th>Ví dụ</th>
+              <th>Ý nghĩa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>FACT</code></td>
+              <td>Derek là tội phạm.</td>
+              <td>Nói thẳng phe của một người.</td>
+            </tr>
+            <tr>
+              <td><code>SAME</code></td>
+              <td>Bea và Noah cùng phe.</td>
+              <td>Hai người cùng là tội phạm hoặc cùng vô tội.</td>
+            </tr>
+            <tr>
+              <td><code>DIFFERENT</code></td>
+              <td>Bea và Noah khác phe.</td>
+              <td>Một người là tội phạm, người kia vô tội.</td>
+            </tr>
+            <tr>
+              <td><code>EXACTLY</code></td>
+              <td>Có đúng 2 tội phạm trong hàng 1.</td>
+              <td>Đếm chính xác số tội phạm trong một vùng.</td>
+            </tr>
+            <tr>
+              <td><code>AT_LEAST</code></td>
+              <td>Có ít nhất 1 tội phạm trong cột B.</td>
+              <td>Số tội phạm không nhỏ hơn con số nêu ra.</td>
+            </tr>
+            <tr>
+              <td><code>AT_MOST</code></td>
+              <td>Có tối đa 1 tội phạm trong hàng xóm của Derek.</td>
+              <td>Số tội phạm không lớn hơn con số nêu ra.</td>
+            </tr>
+            <tr>
+              <td><code>PARITY</code></td>
+              <td>Số tội phạm trong cột A là số chẵn.</td>
+              <td>Chỉ cho biết số tội phạm chẵn hay lẻ.</td>
+            </tr>
+            <tr>
+              <td><code>COMPARE</code></td>
+              <td>Hàng 1 có nhiều hơn cột C.</td>
+              <td>So sánh số tội phạm giữa hai vùng.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p><b>Vùng</b> trong manh mối có thể là một <i>hàng</i>, một <i>cột</i>, <i>hàng xóm</i> của một người (các ô liền
+        kề, kể cả đường chéo), hoặc một danh sách ô cụ thể.</p>
+
+      <div class="eyebrow">Công cụ</div>
+      <h2>Các nút trên bàn chơi</h2>
+      <ul>
+        <li><b>Gợi ý:</b> chỉ ra một người có thể kết luận chắc chắn và làm sáng các manh mối liên quan, không nói thẳng
+          đáp án.</li>
+        <li><b>Từng bước:</b> để máy suy luận và lật đúng một thẻ.</li>
+        <li><b>Tự giải:</b> máy tự giải từng bước, người chơi có thể điều chỉnh tốc độ bằng thanh trượt.</li>
+        <li><b>Chơi lại:</b> xóa tiến độ và đồng hồ của bàn hôm nay.</li>
+        <li><b>Tải puzzle:</b> nạp một bàn tự chọn từ file JSON. Bàn này không lưu tiến độ.</li>
+      </ul>
+      <p>Mỗi ngày trong tuần là một bàn riêng, độ khó tăng dần trong tuần, kích thước từ 3×3 đến 5×5. Đồng hồ tự dừng
+        khi người chơi chuyển sang tab khác, và kết quả đã giải có đánh dấu nếu người chơi quyết định dùng trợ giúp.</p>
 
       <div class="eyebrow">Câu hỏi thường gặp</div>
       <h2>FAQ</h2>
       <details>
         <summary>Tôi có được đoán không?</summary>
-        <p>Không. Game chỉ nhận verdict mà bạn chứng minh được từ các manh mối đã lật.</p>
+        <p>Không. Bàn chỉ nhận verdict mà bạn chứng minh được từ các manh mối đã lật. Gọi khi chưa đủ căn cứ sẽ bị từ
+          chối và không lật thẻ.</p>
       </details>
       <details>
-        <summary>Nút Tự giải hoạt động thế nào?</summary>
-        <p>Agent dùng logic mệnh đề và SAT solver để chỉ chọn những ô suy ra được chắc chắn.</p>
+        <summary>Bàn có thể có hai đáp án không?</summary>
+        <p>Không. Mỗi bàn được kiểm tra để có đúng một cách sắp xếp thỏa mọi manh mối.</p>
       </details>
+      <details>
+        <summary>Nút Tự giải có đoán không?</summary>
+        <p>Không. Máy cũng chỉ lật những thẻ suy ra được chắc chắn bằng logic. Nếu bàn bị kẹt, nó dừng lại thay vì đoán.
+        </p>
+      </details>
+      <details>
+        <summary>Dùng Gợi ý có bị tính điểm không?</summary>
+        <p>Bàn vẫn giải được, nhưng thông báo hoàn thành và thống kê sẽ ghi là có dùng trợ giúp.</p>
+      </details>
+
+      <div class="eyebrow">Về dự án</div>
+      <h2>Griductive Solver</h2>
+      <p>Đây là đồ án <b>Project 2</b> của môn <b>CSC14003, Nhập môn Trí tuệ Nhân tạo</b>, Khoa Công nghệ Thông tin,
+        Trường Đại học Khoa học Tự nhiên, ĐHQG-HCM. Mục tiêu là xây một hệ thống tự giải Griductive bằng logic, không
+        đoán mò.</p>
+
+      <h3>Cách máy suy luận</h3>
+      <ol class="steps">
+        <li><b>Logic mệnh đề.</b> Mỗi người là một biến: đúng nghĩa là tội phạm, sai nghĩa là vô tội. Mỗi manh mối được
+          viết thành công thức logic.</li>
+        <li><b>Mã hóa CNF.</b> Các công thức được đổi sang dạng chuẩn hội (CNF). Những ràng buộc đếm như "đúng k tội
+          phạm" dùng cách mã hóa cardinality của Sinz (2005).</li>
+        <li><b>DPLL SAT solver.</b> Máy giải bài toán thỏa mãn bằng thuật toán DPLL: lan truyền đơn vị, rẽ nhánh và quay
+          lui.</li>
+        <li><b>Kiểm tra suy diễn.</b> Một verdict C chỉ được chấp nhận khi <code>KB ⊨ C</code>, tức là
+          <code>KB ∧ ¬C</code> không thỏa mãn (UNSAT). Từ đó ra ba kết quả: chấp nhận, chưa đủ căn cứ, hoặc mâu thuẫn.
+        </li>
+      </ol>
+      <p>Máy chơi (agent) chỉ nhìn thấy những gì người chơi thấy: các manh mối đã lật và các verdict đã chứng minh. Lời
+        giải ẩn và manh mối chưa lật chỉ nằm trong game engine, trình duyệt cũng không nhận được chúng.</p>
+
+      <h3>Nhóm thực hiện</h3>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Vai trò</th>
+              <th>Phụ trách</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Logic core</td>
+              <td>Mô hình manh mối, bộ xử lý vùng, bộ đánh giá ngữ nghĩa, mã hóa CNF</td>
+            </tr>
+            <tr>
+              <td>SAT và Agent</td>
+              <td>DPLL, kiểm tra suy diễn, kiểm tra nghiệm duy nhất, vòng lặp agent</td>
+            </tr>
+            <tr>
+              <td>Engine và giao diện</td>
+              <td>Game engine, kết nối giao diện, gợi ý, tự giải, tải puzzle</td>
+            </tr>
+            <tr>
+              <td>Puzzle và thực nghiệm</td>
+              <td>Bộ puzzle, sinh và kiểm tra puzzle, đo hiệu năng</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+      <h3>Ghi công</h3>
+      <ul class="credits">
+        <li>Ý tưởng trò chơi lấy cảm hứng từ <b>Griductive</b> của Knotwise và <b>Clues By Sam</b>.</li>
+        <li>Avatar nhân vật: <a href="https://www.npmjs.com/package/beanheads" target="_blank"
+            rel="noopener">BeanHead</a> của Robert Broersma, giấy phép MIT.</li>
+        <li>Bộ icon: Streamline Stickies, giấy phép <a href="https://creativecommons.org/licenses/by/4.0/"
+            target="_blank" rel="noopener">CC BY 4.0</a>.</li>
+        <li>Font Kermel, Nokio, iCielBC Old Style: sử dụng cho mục đích phi thương mại.</li>
+      </ul>
     </section>
   </div>
   <div class="ov" id="pauseM" hidden role="dialog" aria-modal="true" aria-labelledby="pt">
