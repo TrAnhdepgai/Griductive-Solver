@@ -181,6 +181,8 @@
       color: inherit
     }
 
+    .cell { transition: opacity .15s ease; }
+
     .face {
       position: absolute;
       inset: 0;
@@ -193,7 +195,7 @@
       border-radius: 18px;
       box-shadow: 0 6px 0 var(--ink);
       background: #fff3cf;
-      transition: transform .5s cubic-bezier(.3, 1.4, .5, 1), box-shadow .15s;
+      transition: transform .5s cubic-bezier(.3, 1.4, .5, 1), box-shadow .15s, border-color .15s ease, background-color .15s ease;
       transform-style: preserve-3d
     }
 
@@ -298,14 +300,74 @@
       }
     }
 
-    .cell.sel .face {
-      box-shadow: 0 6px 0 var(--ink), 0 0 0 6px var(--yellow), 0 0 0 9px var(--ink)
-    }
-
     .cell.hl .face {
-      box-shadow: 0 6px 0 var(--ink), 0 0 0 5px #fff, 0 0 0 8px var(--pink);
+      border: 3.5px solid #26B5D2;
+      box-shadow: 0 6px 0 var(--ink);
       animation: pulse 1s infinite alternate
     }
+
+    .cell.hint-marked .face {
+      border: 3.5px solid transparent;
+      background: linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+        linear-gradient(90deg, var(--border-left), var(--border-right)) border-box;
+      animation: pulse 1s infinite alternate;
+    }
+
+    .cell.hint-marked.down .face { --card-bg: #fff3cf; }
+    .cell.hint-marked.C .face { --card-bg: var(--pink); }
+    .cell.hint-marked.I .face { --card-bg: var(--cyan); }
+
+    .cell.hint-marked::after {
+      content: "";
+      position: absolute;
+      z-index: 2;
+      top: 8px;
+      right: 9px;
+      width: 8px;
+      height: 8px;
+      border: 2px solid #1A1A1A;
+      border-radius: 50%;
+      background: #26B5D2;
+      pointer-events: none;
+    }
+
+    #board.hint-active .cell.dimmed {
+      opacity: .35;
+    }
+
+    #board.hint-active .cell.dimmed .face {
+      border: 3.5px solid #B0ABA0;
+    }
+
+    .cell.hint-target .face {
+      box-shadow: 0 6px 0 var(--ink), 0 0 0 2px #1A1A1A;
+    }
+
+    .cell.hint-person .nm {
+      color: #1A1A1A;
+      font-weight: 700;
+    }
+
+    .hint-character-text,
+    .hint-range-one,
+    .hint-range-two {
+      display: inline;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      font-weight: 700;
+      color: #1A1A1A;
+    }
+
+    .cell.hint-marked:hover .face,
+    .cell.hint-marked:focus-visible .face {
+      box-shadow: 0 8px 0 var(--ink), 0 0 0 2px #1A1A1A;
+    }
+
+    .cell.sel .face { box-shadow: 0 4px 0 var(--ink), 0 0 0 1px #1A1A1A; }
+
+    .cell.sel:not(.hint-marked) .face { border: 4px solid #FFD60A; }
+    .cell.focus-card .face { box-shadow: 0 4px 0 var(--ink), 0 0 0 1px #1A1A1A; }
 
     @keyframes pulse {
       to {
@@ -315,7 +377,6 @@
 
     .cell.hint .face {
       animation: pulse .5s infinite alternate;
-      background: var(--yellow)
     }
 
     .tag {
@@ -1051,7 +1112,7 @@
     }
     applySettings();
   </script>
-  <script src="static/engine-bridge.js?v=13"></script>
+  <script src="static/engine-bridge.js?v=18"></script>
 </body>
 
 </html>
