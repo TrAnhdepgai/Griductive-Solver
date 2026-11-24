@@ -272,13 +272,13 @@ Chi tiết kỹ thuật: [`docs/part_a_report.md`](docs/part_a_report.md) (Logic
 
 Theo giải đáp của giảng viên (tối thiểu 6 test case, mỗi kích thước 2 test case có **nghiệm duy nhất**, dùng cho Load, Demo Agent và báo cáo):
 
-| Kích thước | Test case 1 | Test case 2 |
-| :---: | :--- | :--- |
-| **3×3** | `puzzles/3x3_easy_01.json` | `puzzles/3x3_medium_01.json` |
-| **4×4** | `puzzles/4x4_easy_01.json` | `puzzles/4x4_medium_01.json` |
-| **5×5** | `puzzles/5x5_medium_01.json` | `puzzles/5x5_hard_01.json` |
+| Kích thước | Test case 1 | Test case 2 | Đặc điểm |
+| :---: | :--- | :--- | :--- |
+| **3×3** | `puzzles/3x3_easy_01.json` | `puzzles/3x3_medium_01.json` | 9 ô, 1 clue ban đầu, nghiệm duy nhất |
+| **4×4** | `puzzles/4x4_easy_01.json` | `puzzles/4x4_medium_01.json` | 16 ô, nghiệm duy nhất, phù hợp demo animate |
+| **5×5** | `puzzles/5x5_medium_01.json` | `puzzles/5x5_hard_01.json` | 25 ô, quy mô lớn, thử thách khả năng suy luận |
 
-Ngoài 6 test case trên, thư mục `puzzles/` còn các puzzle mở rộng (đủ độ khó Easy đến Hard) và 7 puzzle daily. Cả 31 puzzle đều đã được kiểm chứng có đúng một nghiệm và agent giải được toàn bộ.
+Ngoài 6 test case trên, thư mục `puzzles/` còn 18 puzzle mở rộng (đủ độ khó Easy đến Hard) và 7 puzzle daily, tổng cộng 31 puzzle. Cả 31 puzzle đều đã được kiểm chứng có đúng một nghiệm và agent giải được toàn bộ.
 
 ---
 

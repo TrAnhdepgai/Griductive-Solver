@@ -140,3 +140,11 @@ Theo quy định báo cáo của môn học:
 - **Các prompt tiêu biểu đã dùng:**
   - *"Dẫn xuất công thức CNF tối ưu cho phép toán so sánh count(R1) op count(R2) với op thuộc [<, ==, >] sử dụng auxiliary indicator variables sao cho DPLL solver giải nhanh và tránh bùng nổ mệnh đề."*
   - *"Viết script kiểm tra chéo exhaustive brute-force so sánh chân trị ngữ nghĩa của Clue với tính khả thỏa của công thức CNF sau khi gán biến sơ cấp."*
+
+---
+
+## 6. Tài liệu tham khảo (References)
+
+1. **Game tham khảo:** Cơ chế suy luận thẻ bài dựa trên trò chơi gốc **Clues By Sam** ([https://cluesbysam.com/](https://cluesbysam.com/)).
+2. **Tài liệu hướng dẫn môn học:** Đồ án 2 - Logic Mệnh đề & Trò chơi Griductive, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM.
+3. **Mã hóa mệnh đề SAT:** C. Sinz, *"Towards an Optimal CNF Encoding of Boolean Cardinality Constraints"*, Principles and Practice of Constraint Programming - CP 2005.

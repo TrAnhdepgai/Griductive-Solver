@@ -34,19 +34,22 @@ HEADERS = {"puzzle": "Puzzle", "status": "Status", "primary_vars": "Prim.", "aux
            "backtracks": "BT", "steps": "Steps", "waves": "Waves", "runtime_s": "Time (s)"}
 
 
-def _worker(backend: str, path: str, q) -> None:
+def _worker(backend: str, path: str, heuristic: str, strategy: str, q) -> None:
     try:
         sys.path.insert(0, str(TOOLS))
         import adapter
-        res = adapter.run_reference(path) if backend == "reference" else adapter.run_team(path)
+        if backend == "reference":
+            res = adapter.run_reference(path)
+        else:
+            res = adapter.run_team(path, heuristic=heuristic, strategy=strategy)
         q.put(("ok", res))
     except BaseException as e:  # noqa: BLE001 - record any failure
         q.put(("error", f"{type(e).__name__}: {e}"))
 
 
-def run_one(backend: str, path: str, timeout: float):
+def run_one(backend: str, path: str, timeout: float, heuristic: str = "first", strategy: str = "pruned"):
     q = mp.Queue()
-    p = mp.Process(target=_worker, args=(backend, path, q))
+    p = mp.Process(target=_worker, args=(backend, path, heuristic, strategy, q))
     t0 = time.perf_counter()
     p.start()
     deadline = t0 + timeout
@@ -78,7 +81,8 @@ def fmt(v) -> str:
     return str(v)
 
 
-def benchmark(backend: str, files: list[Path], timeout: float, repeats: int) -> list[dict]:
+def benchmark(backend: str, files: list[Path], timeout: float, repeats: int,
+              heuristic: str = "first", strategy: str = "pruned") -> list[dict]:
     from schema import load_puzzle
     rows = []
     for f in files:
@@ -87,7 +91,7 @@ def benchmark(backend: str, files: list[Path], timeout: float, repeats: int) -> 
                "status": "", "error": ""}
         times, last = [], None
         for _ in range(repeats):
-            kind, payload, wall = run_one(backend, str(f), timeout)
+            kind, payload, wall = run_one(backend, str(f), timeout, heuristic=heuristic, strategy=strategy)
             if kind == "timeout":
                 row["status"] = "TIMEOUT"
                 break
@@ -132,6 +136,9 @@ def write_outputs(rows: list[dict], outdir: Path, backend: str) -> None:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--backend", choices=("reference", "team"), default="reference")
+    ap.add_argument("--heuristic", choices=("first", "jw"), default="first", help="DPLL branching heuristic (team only)")
+    ap.add_argument("--strategy", choices=("pruned", "naive"), default="pruned", help="entailment strategy (team only)")
+    ap.add_argument("--tag", default="", help="optional output filename tag instead of backend name")
     ap.add_argument("--puzzles", default=str(ROOT / "puzzles"))
     ap.add_argument("--timeout", type=float, default=60.0, help="seconds per puzzle run")
     ap.add_argument("--repeats", type=int, default=1, help="runs per puzzle; median runtime is reported")
@@ -142,8 +149,8 @@ def main() -> int:
     if not files:
         print("no puzzles found")
         return 1
-    rows = benchmark(a.backend, files, a.timeout, a.repeats)
-    write_outputs(rows, Path(a.out), a.backend)
+    rows = benchmark(a.backend, files, a.timeout, a.repeats, heuristic=a.heuristic, strategy=a.strategy)
+    write_outputs(rows, Path(a.out), a.tag or a.backend)
     return 0 if all(r["status"] == "OK" for r in rows) else 2
 
 
