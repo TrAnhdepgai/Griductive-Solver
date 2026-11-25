@@ -846,7 +846,42 @@
       width: 26px;
       max-width: none
     }
-    
+
+    .cell .note-mark {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      z-index: 3;
+      width: 31px;
+      height: 31px;
+      border: 2px solid var(--ink);
+      border-radius: 0 12px 0 12px
+    }
+
+    .cell.note-innocent .note-mark { background: #35a9ff }
+    .cell.note-criminal .note-mark { background: #ef4444 }
+
+    .cell.note-invalid .face {
+      filter: grayscale(1)
+    }
+
+    .cell.note-invalid .nm,
+    .cell.note-invalid .jb {
+      text-decoration: line-through;
+      text-decoration-thickness: 2px
+    }
+
+    .note-panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 12px
+    }
+
+    .note-panel[hidden] { display: none }
+    .note-panel .btn { font-size: 14px; padding: 8px 12px }
+    .note-panel .btn.active { outline: 3px solid var(--ink); outline-offset: 2px }
 
     /* ---- 4x4 / 5x5: make clues readable on small cards ---- */
     .board-box {
@@ -1014,6 +1049,11 @@
         <div class="board-box">
           <div class="board" id="board"></div>
           <div class="call" id="call"></div>
+          <div class="note-panel" id="notePanel" hidden aria-label="Ghi chú nhân vật">
+            <button class="btn yellow" data-note="invalid" title="Đánh dấu lời khai hết giá trị">Lời khai hết giá trị</button>
+            <button class="btn cyan" data-note="innocent" title="Đánh dấu nghi ngờ vô tội">Nghi vô tội</button>
+            <button class="btn pink" data-note="criminal" title="Đánh dấu nghi ngờ có tội">Nghi có tội</button>
+          </div>
         </div>
       </section>
       <aside class="side">
@@ -1272,7 +1312,7 @@
     const PUZZLES = [];
     let P = null;
     const IC = n => `<img src="static/icons/${n}.svg" alt="">`, $ = s => document.querySelector(s), sleep = ms => new Promise(r => setTimeout(r, ms));
-    let elapsed = 0, solved = false, assisted = false, paused = false, modalOpen = false, custom = false, curDate = null, viewMon = null, last = performance.now(), N, cells, rev, sel = null, hl = [], busy = false, sat = 0, steps = 0, hintCell = null;
+    let elapsed = 0, solved = false, assisted = false, paused = false, modalOpen = false, custom = false, curDate = null, viewMon = null, last = performance.now(), N, cells, rev, notes = {}, sel = null, hl = [], busy = false, sat = 0, steps = 0, hintCell = null;
     const L = { CRIMINAL: "Tội phạm", INNOCENT: "Vô tội" };
     // ---- region + evaluator (bản JS tạm cho Mock) ----
     function region(r) {
@@ -1324,18 +1364,30 @@
     function explain(c, v) { let s = Object.keys(rev); for (const k of [...s]) { const t = s.filter(x => x != k); if (forced(t).f?.[c] == v) s = t } return s }
     // ---- Vẽ ----
     function load(p, saved) {
-      P = p; N = P.size; cells = Object.keys(P.characters); rev = {}; P.initial_revealed.forEach(c => rev[c] = P.solution[c]); if (saved && saved.rev) Object.assign(rev, saved.rev); elapsed = saved ? saved.elapsed || 0 : 0; assisted = !!(saved && saved.assisted); solved = Object.keys(rev).length == cells.length; sel = null; hl = []; sat = 0; steps = 0; hintCell = null;
+      P = p; N = P.size; cells = Object.keys(P.characters); rev = {}; notes = saved && saved.notes ? { ...saved.notes } : {}; P.initial_revealed.forEach(c => rev[c] = P.solution[c]); if (saved && saved.rev) Object.assign(rev, saved.rev); elapsed = saved ? saved.elapsed || 0 : 0; assisted = !!(saved && saved.assisted); solved = Object.keys(rev).length == cells.length; sel = null; hl = []; sat = 0; steps = 0; hintCell = null;
       $("#log").innerHTML = ""; $("#toast").innerHTML = ""; $("#call").innerHTML = ""; $("#clue").textContent = "Chạm vào một thẻ đã lật để đọc manh mối của nó."; draw()
     }
     function draw(flipped) {
       renderClock(); const b = $("#board"); b.style.setProperty("--n", N); let h = '<div></div>' + [...Array(N)].map((_, i) => `<div class="lab">${"ABCDE"[i]}</div>`).join("");
       cells.forEach((c, i) => {
-        if (i % N == 0) h += `<div class="lab">${c[1]}</div>`; const s = rev[c], cls = ["cell", s ? s[0] : "down", c == sel ? "sel" : "", hl.includes(c) ? "hl" : "", c == hintCell ? "hint" : "", c == flipped ? "flip" : ""].join(" ");
-        h += `<button class="${cls}" data-c="${c}" aria-label="${c} ${nm(c)}${s ? ", " + L[s] : ", chưa lật"}"><div class="face"><span class="tag">${c}</span>${avatar(c, nm(c), P.characters[c].look, s)}${s ? `<img class="badge" src="static/icons/${s == "CRIMINAL" ? "ghost" : "love"}.svg" alt="">` : ""}<span class="nm">${nm(c)}</span><span class="jb">${P.characters[c].job}</span></div></button>`
+        if (i % N == 0) h += `<div class="lab">${c[1]}</div>`; const s = rev[c], note = notes[c], cls = ["cell", s ? s[0] : "down", c == sel ? "sel" : "", hl.includes(c) ? "hl" : "", c == hintCell ? "hint" : "", c == flipped ? "flip" : "", note ? `note-${note}` : ""].join(" ");
+        const mark = note == "innocent" || note == "criminal" ? `<span class="note-mark" title="${note == "innocent" ? "Nghi vô tội" : "Nghi có tội"}" aria-hidden="true"></span>` : "";
+        const noteLabel = note ? `, ghi chú: ${{ invalid: "lời khai hết giá trị", innocent: "nghi vô tội", criminal: "nghi có tội" }[note]}` : "";
+        h += `<button class="${cls}" data-c="${c}" aria-label="${c} ${nm(c)}${s ? ", " + L[s] : ", chưa lật"}${noteLabel}"><div class="face">${mark}<span class="tag">${c}</span>${avatar(c, nm(c), P.characters[c].look, s)}${s ? `<img class="badge" src="static/icons/${s == "CRIMINAL" ? "ghost" : "love"}.svg" alt="">` : ""}<span class="nm">${nm(c)}</span><span class="jb">${P.characters[c].job}</span></div></button>`
       });
       b.innerHTML = h; b.querySelectorAll(".cell").forEach(e => e.onclick = () => pick(e.dataset.c));
+      renderNotePanel();
       $("#stats").innerHTML = `<span>Bước: <b>${steps}</b></span><span>Lượt SAT (mock): <b>${sat}</b></span><span>Đã lật: <b>${Object.keys(rev).length}/${cells.length}</b></span>`;
     }
+    function renderNotePanel() {
+      const panel = $("#notePanel"); panel.hidden = !sel;
+      panel.querySelectorAll("[data-note]").forEach(b => b.classList.toggle("active", notes[sel] == b.dataset.note));
+    }
+    $("#notePanel").querySelectorAll("[data-note]").forEach(b => b.onclick = () => {
+      if (!sel || busy || paused) return;
+      if (notes[sel] == b.dataset.note) delete notes[sel]; else notes[sel] = b.dataset.note;
+      save(); draw();
+    });
     function toast(t, c) { $("#toast").innerHTML = `<span class="pill ${c}">${t}</span>` }
     function log(t) { const li = document.createElement("li"); li.textContent = t; $("#log").prepend(li) }
     function pick(c) {
@@ -1388,7 +1440,7 @@
     const doneMsg = () => `Phá án xong trong ${fmt(elapsed)}!${assisted ? " (có dùng trợ giúp)" : ""}`;
     function save() {
       if (custom) return; const r = {}; Object.keys(rev).forEach(c => { if (!P.initial_revealed.includes(c)) r[c] = rev[c] });
-      store.days[key()] = { rev: r, elapsed: Math.floor(elapsed), solved, assisted, steps }; persist()
+      store.days[key()] = { rev: r, notes, elapsed: Math.floor(elapsed), solved, assisted, steps }; persist()
     }
     function buzz(p) { if (S.haptics && navigator.vibrate) try { navigator.vibrate(p) } catch (e) { } }
     function renderClock() { const t = S.showTime ? fmt(elapsed) : "••:••"; if ($("#clk").textContent != t) $("#clk").textContent = t }
