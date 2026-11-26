@@ -165,13 +165,8 @@ selectDate = async function (d) {
   curDate = day; viewMon = monday(curDate); loadingDay = true; renderWeek();
   try { await startDailyPuzzle(day); } catch (e) { toast(e.message, "bad"); } finally { loadingDay = false; }
 };
-// Calendar: lock days older than the 6-month window and stop the "previous week" arrow there.
-const renderWeekBase = renderWeek;
-renderWeek = function () {
-  renderWeekBase(); const lo = earliestDay(); if (!lo) return;
-  $("#week").querySelectorAll("button").forEach((b, i) => { const d = new Date(viewMon); d.setDate(d.getDate() + i); if (d < lo) b.disabled = true; });
-  const prevSun = new Date(viewMon); prevSun.setDate(prevSun.getDate() - 1); $("#wPrev").disabled = prevSun < lo;
-};
+// Calendar (week strip + month picker): lock days older than the server's window.
+minDay = earliestDay;
 pick = async function (c) {
   if (busy || paused) return; sel = c; hintCell = null; hl = []; hintScopes = []; hintColorGroups = { first: new Set(), second: new Set(), people: new Set() };
   if (rev[c]) { $("#clue").innerHTML = `<b>${nm(c)} (${c}):</b> ${clueText(P.clues[c])}`; hl = clueCells(P.clues[c]); if (P.clues[c]) makeHintColorGroups([c]); $("#call").innerHTML = ""; }
