@@ -144,7 +144,10 @@ async function startEnginePuzzle(index = 0) {
   $("#dayinfo").textContent = `${meta.id} · ${p.size}×${p.size}`;
 }
 load = function (p) { acceptEngineState(p); };
-selectDate = async function (d) { if (busy) return; curDate = new Date(d); viewMon = monday(curDate); const i = (curDate.getDay() + 6) % 7; await startEnginePuzzle(i); };
+// Puzzle list is sorted by file name, so "thu" comes before "wed": pick the daily puzzle by its weekday suffix, not by position.
+const DAY_CODES = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+function dailyIndex(i) { const j = enginePuzzleIds.findIndex(m => /daily/.test(m.file) && m.file.replace(/\.json$/, "").endsWith("_" + DAY_CODES[i])); return j >= 0 ? j : i; }
+selectDate = async function (d) { if (busy) return; curDate = new Date(d); viewMon = monday(curDate); const i = (curDate.getDay() + 6) % 7; await startEnginePuzzle(dailyIndex(i)); };
 pick = async function (c) {
   if (busy || paused) return; sel = c; hintCell = null; hl = []; hintScopes = []; hintColorGroups = { first: new Set(), second: new Set(), people: new Set() };
   if (rev[c]) { $("#clue").innerHTML = `<b>${nm(c)} (${c}):</b> ${clueText(P.clues[c])}`; hl = clueCells(P.clues[c]); if (P.clues[c]) makeHintColorGroups([c]); $("#call").innerHTML = ""; }
@@ -172,4 +175,4 @@ $("#bStep").onclick = () => { if (!busy && !paused && !solved) { assisted = true
 $("#bAuto").onclick = async () => { if (busy) { busy = false; return; } if (solved || paused) return; assisted = true; lock(true); while (busy && await stepOnce()) await sleep(1400 / +$("#speed").value); lock(false); };
 $("#bRestart").onclick = async () => { if (busy) return; try { const p = await api("/api/reset", { id: P.id, session: gameSession }); elapsed = 0; last = performance.now(); renderClock(); acceptEngineState(p); } catch (e) { toast(e.message, "bad"); } };
 $("#file").disabled = true; $("#bLoad").disabled = true;
-api("/api/puzzles").then(items => { enginePuzzleIds = items; return startEnginePuzzle(0); }).catch(e => toast(e.message, "bad"));
+api("/api/puzzles").then(items => { enginePuzzleIds = items; return selectDate(today()); }).catch(e => toast(e.message, "bad"));
