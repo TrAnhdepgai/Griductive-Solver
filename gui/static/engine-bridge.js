@@ -147,7 +147,31 @@ load = function (p) { acceptEngineState(p); };
 // Puzzle list is sorted by file name, so "thu" comes before "wed": pick the daily puzzle by its weekday suffix, not by position.
 const DAY_CODES = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 function dailyIndex(i) { const j = enginePuzzleIds.findIndex(m => /daily/.test(m.file) && m.file.replace(/\.json$/, "").endsWith("_" + DAY_CODES[i])); return j >= 0 ? j : i; }
-selectDate = async function (d) { if (busy) return; curDate = new Date(d); viewMon = monday(curDate); const i = (curDate.getDay() + 6) % 7; await startEnginePuzzle(dailyIndex(i)); };
+// ---- Daily mode: every calendar date has its own puzzle, playable for the last 6 months ----
+// The server generates a date's puzzle the first time it is opened (src/engine/daily.py).
+let dailyInfo = null, loadingDay = false;
+const parseIso = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+const earliestDay = () => dailyInfo ? parseIso(dailyInfo.earliest) : null;
+async function startDailyPuzzle(d) {
+  const k = iso(d); if (!(dailyInfo.ready || []).includes(k)) toast(`Đang tạo puzzle cho ngày ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}…`, "warn");
+  const p = await api("/api/start", { date: k }); (dailyInfo.ready = dailyInfo.ready || []).push(k);
+  acceptEngineState(p); renderWeek(); infoLine(); $("#toast").textContent = "";
+}
+selectDate = async function (d) {
+  if (busy || loadingDay) return;
+  const day = new Date(d); day.setHours(0, 0, 0, 0);
+  if (!dailyInfo) { curDate = day; viewMon = monday(curDate); return startEnginePuzzle(dailyIndex((day.getDay() + 6) % 7)); }  // old server: weekday files
+  if (day > today() || day < earliestDay()) return toast("Chỉ chơi được các ngày trong 6 tháng gần nhất", "warn");
+  curDate = day; viewMon = monday(curDate); loadingDay = true; renderWeek();
+  try { await startDailyPuzzle(day); } catch (e) { toast(e.message, "bad"); } finally { loadingDay = false; }
+};
+// Calendar: lock days older than the 6-month window and stop the "previous week" arrow there.
+const renderWeekBase = renderWeek;
+renderWeek = function () {
+  renderWeekBase(); const lo = earliestDay(); if (!lo) return;
+  $("#week").querySelectorAll("button").forEach((b, i) => { const d = new Date(viewMon); d.setDate(d.getDate() + i); if (d < lo) b.disabled = true; });
+  const prevSun = new Date(viewMon); prevSun.setDate(prevSun.getDate() - 1); $("#wPrev").disabled = prevSun < lo;
+};
 pick = async function (c) {
   if (busy || paused) return; sel = c; hintCell = null; hl = []; hintScopes = []; hintColorGroups = { first: new Set(), second: new Set(), people: new Set() };
   if (rev[c]) { $("#clue").innerHTML = `<b>${nm(c)} (${c}):</b> ${clueText(P.clues[c])}`; hl = clueCells(P.clues[c]); if (P.clues[c]) makeHintColorGroups([c]); $("#call").innerHTML = ""; }
@@ -175,4 +199,4 @@ $("#bStep").onclick = () => { if (!busy && !paused && !solved) { assisted = true
 $("#bAuto").onclick = async () => { if (busy) { busy = false; return; } if (solved || paused) return; assisted = true; lock(true); while (busy && await stepOnce()) await sleep(1400 / +$("#speed").value); lock(false); };
 $("#bRestart").onclick = async () => { if (busy) return; try { const p = await api("/api/reset", { id: P.id, session: gameSession }); elapsed = 0; last = performance.now(); renderClock(); acceptEngineState(p); } catch (e) { toast(e.message, "bad"); } };
 $("#file").disabled = true; $("#bLoad").disabled = true;
-api("/api/puzzles").then(items => { enginePuzzleIds = items; return selectDate(today()); }).catch(e => toast(e.message, "bad"));
+api("/api/puzzles").then(async items => { enginePuzzleIds = items; try { dailyInfo = await api("/api/daily"); } catch (_) { dailyInfo = null; } return selectDate(today()); }).catch(e => toast(e.message, "bad"));

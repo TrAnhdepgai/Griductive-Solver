@@ -7,6 +7,7 @@ from __future__ import annotations
 import json
 import uuid
 import argparse
+from datetime import date
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
@@ -15,11 +16,13 @@ from src.agent.agent import LogicAgent, explain
 from src.agent.interface import ACCEPTED
 from src.agent.local_engine import LocalGameEngine
 from src.logic.model import Puzzle
+from src.engine.daily import RETENTION_MONTHS, DailyStore, puzzle_id
 
 ROOT = Path(__file__).resolve().parents[2]
 GUI = ROOT / "gui"
 PUZZLES = ROOT / "puzzles"
 games: dict[str, LocalGameEngine] = {}
+DAILY = DailyStore()
 
 
 def gui_clue(clue):
@@ -75,6 +78,11 @@ class Handler(SimpleHTTPRequestHandler):
             for f in sorted(PUZZLES.glob("*.json")):
                 p=Puzzle.load(f); items.append({"id":p.id,"size":p.size,"difficulty":p.difficulty,"file":f.name})
             return self.send_json(items)
+        if path == "/api/daily":
+            DAILY.prune()
+            lo, hi = DAILY.window()
+            return self.send_json({"today": hi.isoformat(), "earliest": lo.isoformat(),
+                                   "retention_months": RETENTION_MONTHS, "ready": DAILY.ready_dates()})
         if path == "/api/state":
             query=parse_qs(urlparse(self.path).query)
             session=query.get("session", [""])[0]
@@ -85,10 +93,22 @@ class Handler(SimpleHTTPRequestHandler):
         body=json.loads(self.rfile.read(int(self.headers.get("Content-Length",0))) or b"{}")
         path=urlparse(self.path).path; pid=body.get("id", "3x3_easy_01")
         if path == "/api/start":
-            file=next((p for p in PUZZLES.glob("*.json") if Puzzle.load(p).id==pid),None)
-            if file is None: return self.send_json({"error":"Puzzle not found"},404)
+            if body.get("date"):
+                # Daily mode: one puzzle per calendar date, generated on first use, kept 6 months.
+                try:
+                    day=date.fromisoformat(body["date"]); file=DAILY.get(day); pid=puzzle_id(day)
+                except ValueError as e:
+                    return self.send_json({"error":str(e)},400)
+                except RuntimeError as e:
+                    return self.send_json({"error":f"Không tạo được puzzle: {e}"},500)
+            else:
+                file=next((p for p in PUZZLES.glob("*.json") if Puzzle.load(p).id==pid),None)
+                if file is None: return self.send_json({"error":"Puzzle not found"},404)
             session=uuid.uuid4().hex
-            games[session]=LocalGameEngine.load(str(file)); return self.send_json(public_payload(pid,session,games[session]))
+            games[session]=LocalGameEngine.load(str(file))
+            payload=public_payload(pid,session,games[session])
+            payload["date"]=games[session].full_puzzle.get("date"); payload["difficulty"]=games[session].full_puzzle.get("difficulty")
+            return self.send_json(payload)
         session=body.get("session", "")
         if session not in games: return self.send_json({"error":"Game session expired. Restart the puzzle."},404)
         engine=games[session]
@@ -121,4 +141,5 @@ if __name__ == "__main__":
     parser.add_argument("--port", type=int, default=8001)
     port=parser.parse_args().port
     print(f"Griductive GUI: http://127.0.0.1:{port}", flush=True)
+    DAILY.warm_up()   # prune puzzles older than 6 months and pre-build today's puzzle in the background
     ThreadingHTTPServer(("127.0.0.1",port),Handler).serve_forever()
