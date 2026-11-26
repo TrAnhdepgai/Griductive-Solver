@@ -634,7 +634,149 @@
     }
 
     .arrow:disabled {
-      opacity: .25
+      opacity: .25;
+      cursor: not-allowed
+    }
+
+    .cal {
+      position: relative
+    }
+
+    .calbtn {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      margin-left: 2px;
+      border: 3px solid var(--ink);
+      border-radius: 14px;
+      background: var(--yellow);
+      box-shadow: 0 4px 0 var(--ink);
+      cursor: pointer;
+      transition: transform .08s, box-shadow .08s
+    }
+
+    .calbtn svg {
+      width: 28px;
+      height: 28px
+    }
+
+    .calbtn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 0 var(--ink)
+    }
+
+    .calbtn:active,
+    .calbtn[aria-expanded=true] {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 var(--ink)
+    }
+
+    .picker {
+      position: absolute;
+      top: calc(100% + 14px);
+      right: 0;
+      z-index: 40;
+      width: 312px;
+      max-width: calc(100vw - 32px);
+      padding: 12px;
+      background: var(--paper);
+      color: var(--fg);
+      border: var(--rim) solid var(--ink);
+      border-radius: 22px;
+      box-shadow: 0 8px 0 var(--ink)
+    }
+
+    .picker[hidden] {
+      display: none
+    }
+
+    .pk-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px
+    }
+
+    .pk-head b {
+      font: 400 20px OldStyle
+    }
+
+    .pk-wd,
+    .pk-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      text-align: center
+    }
+
+    .pk-wd span {
+      font: 13px OldStyle;
+      opacity: .7
+    }
+
+    .pd {
+      position: relative;
+      aspect-ratio: 1;
+      font: 17px OldStyle;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      background: none;
+      color: var(--fg);
+      cursor: pointer;
+      padding: 0
+    }
+
+    .pd:hover:not(:disabled) {
+      background: var(--yellow);
+      color: #231f20
+    }
+
+    .pd.today {
+      border-color: var(--fg);
+      border-style: dashed
+    }
+
+    .pd.sel {
+      background: var(--pink);
+      border: 2px solid var(--ink);
+      color: #231f20;
+      box-shadow: 0 3px 0 var(--ink)
+    }
+
+    .pd.done::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 7px;
+      height: 7px;
+      border-radius: 9px;
+      background: #4caf50;
+      border: 1.5px solid var(--ink)
+    }
+
+    .pd:disabled {
+      opacity: .25;
+      cursor: not-allowed;
+      text-decoration: line-through
+    }
+
+    .pk-note {
+      margin: 8px 2px 0;
+      font-size: 13px;
+      opacity: .75;
+      text-align: center
+    }
+
+    @media (max-width: 600px) {
+      .picker {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%)
+      }
     }
 
     .clock {
@@ -1023,9 +1165,23 @@
     <h1>Griductive</h1>
     <p class="sub">Mỗi người là tội phạm hoặc vô tội. Chỉ gọi tên khi suy luận chắc chắn, đừng đoán mò.</p>
     <div class="top">
-      <div class="cal"><button class="arrow" id="wPrev" aria-label="Tuần trước">‹</button><span class="wl">DỄ</span>
-        <div class="week" id="week"></div><span class="wl">KHÓ</span><button class="arrow" id="wNext"
-          aria-label="Tuần sau">›</button>
+      <div class="cal"><span class="wl">DỄ</span>
+        <div class="week" id="week"></div><span class="wl">KHÓ</span>
+        <button class="calbtn" id="calBtn" aria-label="Chọn ngày khác" aria-haspopup="dialog" aria-expanded="false"
+          title="Chọn ngày"><svg viewBox="0 0 32 32" aria-hidden="true">
+            <rect x="3" y="6" width="26" height="23" rx="4" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.5" />
+            <path d="M3 10a4 4 0 0 1 4-4h18a4 4 0 0 1 4 4v3H3z" fill="#f9a8a0" stroke="var(--ink)" stroke-width="2.5" />
+            <path d="M10 3v6M22 3v6" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round" />
+            <g fill="var(--ink)"><circle cx="10" cy="18" r="1.6" /><circle cx="16" cy="18" r="1.6" /><circle cx="22" cy="18" r="1.6" /><circle cx="10" cy="24" r="1.6" /><circle cx="16" cy="24" r="1.6" /></g>
+            <rect x="19.5" y="21.5" width="5" height="5" rx="1.2" fill="#f9e46f" stroke="var(--ink)" stroke-width="1.8" />
+          </svg></button>
+        <div class="picker" id="picker" role="dialog" aria-label="Chọn ngày chơi" hidden>
+          <div class="pk-head"><button class="arrow" id="pkPrev" aria-label="Tháng trước">‹</button><b id="pkTitle"></b><button
+              class="arrow" id="pkNext" aria-label="Tháng sau">›</button></div>
+          <div class="pk-wd"><span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span></div>
+          <div class="pk-grid" id="pkGrid"></div>
+          <p class="pk-note" id="pkNote"></p>
+        </div>
       </div>
       <div class="clock">
         <img src="static/icons/time.svg" alt=""><b id="clk">00:00</b>
@@ -1483,17 +1639,42 @@
         b.setAttribute("aria-label", `${FULL[d.getDay()]} ${d.getDate()}/${d.getMonth() + 1}${done ? ", đã giải" : ""}`);
         b.innerHTML = `${done ? '<img src="static/icons/validation-1.svg" alt="">' : ""}${WD[d.getDay()]}<b>${d.getDate()}</b>`; b.onclick = () => { if (!busy) selectDate(d) }; w.appendChild(b)
       }
-      const nx = new Date(viewMon); nx.setDate(nx.getDate() + 7); $("#wNext").disabled = nx > t
+      const lo = minDay(); if (lo) w.querySelectorAll("button").forEach((b, i) => { const d = new Date(viewMon); d.setDate(d.getDate() + i); if (d < lo) b.disabled = true });
+      if (!$("#picker").hidden) renderPicker()
     }
-    $("#wPrev").onclick = () => { viewMon.setDate(viewMon.getDate() - 7); renderWeek() };
-    $("#wNext").onclick = () => { viewMon.setDate(viewMon.getDate() + 7); renderWeek() };
+    // Month picker behind the calendar icon. Future days and days before minDay() cannot be picked.
+    let minDay = () => null, pickMon = null;
+    const dm = d => `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+    function renderPicker() {
+      const t = today(), lo = minDay(), g = $("#pkGrid"), y = pickMon.getFullYear(), m = pickMon.getMonth(); g.innerHTML = "";
+      $("#pkTitle").textContent = `Tháng ${m + 1}/${y}`;
+      for (let i = (new Date(y, m, 1).getDay() + 6) % 7; i > 0; i--) g.appendChild(document.createElement("span"));
+      for (let n = 1, last = new Date(y, m + 1, 0).getDate(); n <= last; n++) {
+        const d = new Date(y, m, n), k = iso(d), fut = d > t, old = !!lo && d < lo, b = document.createElement("button");
+        b.className = "pd" + (curDate && k == iso(curDate) && !custom ? " sel" : "") + (k == iso(t) ? " today" : "") + (store.days[k]?.solved ? " done" : "");
+        b.textContent = n; b.disabled = fut || old;
+        b.title = fut ? "Chưa tới ngày này" : old ? "Đã quá 6 tháng" : `${FULL[d.getDay()]} · ${LV[(d.getDay() + 6) % 7]}${store.days[k]?.solved ? " · Đã giải" : ""}`;
+        b.setAttribute("aria-label", `${FULL[d.getDay()]} ${dm(d)}, ${b.title}`);
+        b.onclick = () => { closePicker(); selectDate(d) }; g.appendChild(b)
+      }
+      $("#pkPrev").disabled = !!lo && new Date(y, m, 0) < lo;
+      $("#pkNext").disabled = new Date(y, m + 1, 1) > t;
+      $("#pkNote").textContent = lo ? `Chơi được từ ${dm(lo)} đến ${dm(t)}` : `Chơi được đến hôm nay (${dm(t)})`;
+    }
+    function openPicker() { const d = curDate || today(); pickMon = new Date(d.getFullYear(), d.getMonth(), 1); $("#picker").hidden = false; $("#calBtn").setAttribute("aria-expanded", "true"); renderPicker(); ($("#pkGrid .sel") || $("#pkGrid button:not(:disabled)"))?.focus() }
+    function closePicker() { if ($("#picker").hidden) return; $("#picker").hidden = true; $("#calBtn").setAttribute("aria-expanded", "false") }
+    $("#calBtn").onclick = () => $("#picker").hidden ? openPicker() : closePicker();
+    $("#pkPrev").onclick = () => { pickMon.setMonth(pickMon.getMonth() - 1); renderPicker() };
+    $("#pkNext").onclick = () => { pickMon.setMonth(pickMon.getMonth() + 1); renderPicker() };
+    document.addEventListener("click", e => { if (!e.composedPath().some(n => n.id == "picker" || n.id == "calBtn")) closePicker() });
+    document.addEventListener("keydown", e => { if (e.key == "Escape" && !$("#picker").hidden) { closePicker(); $("#calBtn").focus() } });
     function selectDate(d) {
       if (busy) return; custom = false; curDate = new Date(d); viewMon = monday(curDate); P = PUZZLES[(curDate.getDay() + 6) % 7];
       if (paused) resume(); load(P, store.days[key()]); infoLine(); renderWeek()
     }
     applySettings();
   </script>
-  <script src="static/engine-bridge.js?v=21"></script>
+  <script src="static/engine-bridge.js?v=22"></script>
 </body>
 
 </html>
