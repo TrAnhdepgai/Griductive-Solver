@@ -106,31 +106,67 @@ Griductive-Solver/
 
 ## 🚀 Cài đặt & chạy
 
-Yêu cầu **Python 3.9+**. Chạy mọi lệnh từ **thư mục gốc của repo**.
+Yêu cầu **Python 3.9+** và thư viện **`numpy`**. Chạy mọi lệnh từ **thư mục gốc của repo**.
 
-```bash
-pip install -r requirements.txt
+> **Vì sao cần `numpy`:** GUI tự tạo một puzzle mới cho mỗi ngày bằng bộ sinh puzzle trong `tools/`, mà bộ này dùng `numpy`. Thiếu `numpy` thì server vẫn mở được trang nhưng không tạo được puzzle: terminal báo `[daily] warm-up failed: No module named 'numpy'` và web hiện *"Chưa kết nối engine"*. Lõi logic, DPLL và agent chỉ dùng thư viện chuẩn. **Node.js không bắt buộc**, chỉ cần khi muốn sửa avatar (xem mục "Tùy chỉnh avatar").
+
+Nên cài vào một **môi trường ảo (`.venv`) riêng cho project**: mỗi máy tự tạo `.venv` của mình (thư mục này không commit lên git), rồi cài thư viện theo `requirements.txt`. Chọn **một** trong hai cách sau.
+
+**Cách A: dùng `pip` (Python cài từ python.org, Microsoft Store...)**
+
+```powershell
+python -m venv .venv                 # tạo môi trường ảo (làm 1 lần)
+.venv\Scripts\activate               # Windows; macOS/Linux: source .venv/bin/activate
+pip install -r requirements.txt      # cài numpy, pytest
+python main.py                       # chạy game
 ```
 
-> Lõi logic, DPLL, agent và GUI chỉ dùng thư viện chuẩn của Python. `numpy` chỉ cần cho các công cụ của D (`tools/`). **Node.js không bắt buộc** để chạy game, chỉ cần khi muốn sửa avatar (xem mục "Tùy chỉnh avatar").
+Lần sau chỉ cần `.venv\Scripts\activate` rồi `python main.py`.
+
+**Cách B: dùng [`uv`](https://docs.astral.sh/uv/) (nếu Python của bạn cài qua uv)**
+
+Python do uv quản lý **không cho cài thư viện trực tiếp** (`pip install` / `uv pip install --system` báo lỗi *externally managed*), nên phải dùng môi trường ảo:
+
+```powershell
+uv venv                              # tạo .venv (làm 1 lần)
+uv pip install -r requirements.txt   # cài thư viện vào .venv
+uv run main.py                       # chạy game bằng Python trong .venv
+```
+
+**Dùng nút Run của VS Code:** nhấn `Ctrl+Shift+P` → *Python: Select Interpreter* → chọn `.venv\Scripts\python.exe` (không thấy thì chọn *Enter interpreter path…* và dán đường dẫn này). Nút Run sẽ dùng đúng `.venv` đã có `numpy`.
+
+**Kiểm tra nhanh** Python đang chạy game đã có `numpy` chưa (dùng đúng lệnh Python mà bạn chạy `main.py`):
+
+```powershell
+python -c "import numpy; print(numpy.__version__)"
+```
+
+> Lỗi hay gặp: đã `pip install numpy` nhưng vẫn báo thiếu. Nguyên nhân là máy có nhiều bản Python và `numpy` được cài vào bản khác với bản đang chạy `main.py` (xem dòng lệnh đầu tiên VS Code in ra trong terminal). Cách chắc chắn nhất là dùng `.venv` như trên.
 
 ### 1. Chạy GUI (chơi và demo)
 
 ```bash
-python -m src.engine.gui_server            # mặc định cổng 8001
-python -m src.engine.gui_server --port 9000
+python main.py                       # chạy server và tự mở trình duyệt (khuyên dùng)
+python main.py --port 9000           # chọn cổng khác; cổng bận thì tự chuyển cổng kế tiếp
+python main.py --no-browser          # chỉ chạy server
 
-# hoặc cách sau
-python main.py        # chạy server và tự mở trình duyệt
+# hoặc chạy trực tiếp server
+python -m src.engine.gui_server      # mặc định cổng 8001
 ```
 
-Mở <http://127.0.0.1:8001> trong trình duyệt. Cần mở GUI **qua đúng địa chỉ này** (đừng mở thẳng file `index.html`), vì giao diện gọi API của server.
+Mở địa chỉ in ra trên terminal (mặc định <http://127.0.0.1:8001>). Cần mở GUI **qua đúng địa chỉ này** (đừng mở thẳng file `index.html`), vì giao diện gọi API của server. Dừng server bằng `Ctrl+C`.
+
+**Puzzle theo ngày:** lần đầu chạy, server tạo puzzle hôm nay trước rồi tạo ngầm các ngày còn lại (khoảng vài phút cho đủ 183 ngày ≈ 6 tháng), lưu ở `puzzles/daily/` (không commit). Các lần sau chỉ tạo thêm 1 puzzle mỗi ngày. Muốn tạo sẵn hết trước khi demo:
+
+```bash
+python -m src.engine.daily           # dùng tất cả nhân CPU; --jobs N để giới hạn
+```
 
 Chức năng chính:
 - **Chơi tay:** chọn ô, gọi *Tội phạm / Vô tội*. Verdict đúng thì lật thẻ và lộ clue; sai thì báo `NOT_PROVABLE` hoặc `CONTRADICTED`, không lộ clue.
 - **Chọn một clue đã lật** để highlight các ô mà clue nhắc tới.
 - **Hint** (chỉ ra một ô ép được và clue liên quan), **Từng bước**, **Tự giải** (agent chạy từng bước), **Chơi lại**, **Tải puzzle**.
-- **Lịch theo ngày:** mỗi thứ trong tuần là một puzzle (7 file `00_daily_*`), độ khó tăng từ Thứ Hai đến Chủ Nhật. Có đồng hồ, cài đặt và thông báo tạm dừng khi chuyển tab.
+- **Lịch theo ngày:** mỗi ngày có một puzzle riêng, độ khó tăng từ Thứ Hai (3×3 dễ) đến Chủ Nhật (5×5 khó). Bấm **icon lịch** để chọn ngày khác trong 183 ngày gần nhất; ngày chưa tới hoặc quá 6 tháng bị khoá. Cùng một ngày luôn ra cùng một puzzle. Có đồng hồ, cài đặt và thông báo tạm dừng khi chuyển tab.
 - **Avatar nhân vật:** mỗi nhân vật có avatar riêng (BeanHead), sinh cố định theo tên và id. Thẻ tội phạm đeo kính đen và khẩu trang, vẻ mặt khác với thẻ vô tội.
 
 API của server (chi tiết trong `src/engine/gui_server.py`): `GET /api/puzzles`, `GET /api/state`, `POST /api/start`, `/api/call`, `/api/hint`, `/api/step`, `/api/reset`.
