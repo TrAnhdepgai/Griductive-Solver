@@ -12,7 +12,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-from src.agent.agent import LogicAgent, explain
+from src.agent.agent import LogicAgent, classify_state, explain
 from src.agent.interface import ACCEPTED
 from src.agent.local_engine import LocalGameEngine
 from src.logic.model import Puzzle
@@ -47,6 +47,33 @@ def gui_clue(clue):
     return d
 
 
+def _stats(engine):
+    """Size of KB_t and DPLL effort needed to classify the current public state.
+
+    Computed once per distinct state (cached on the engine), from the public state only."""
+    state = engine.public_state()
+    cache = engine.__dict__.setdefault("_gui_stats", {})
+    key = tuple(sorted(state.proved.items()))
+    if key not in cache:
+        cls = classify_state(state)
+        s = cls.stats.as_dict()
+        cache[key] = {"kb": cls.kb.stats(),
+                      "sat": {"calls": s["calls"], "decisions": s["decisions"], "propagations": s["propagations"],
+                              "backtracks": s["backtracks"], "conflicts": s["conflicts"],
+                              "ms": round(s["runtime_s"] * 1000, 3)},
+                      "forced": len(cls.forced), "consistent": cls.consistent}
+    return cache[key]
+
+
+def _total(engine):
+    """Cumulative DPLL effort over every distinct state visited in this game."""
+    tot = {"calls": 0, "decisions": 0, "propagations": 0, "backtracks": 0}
+    for v in engine.__dict__.get("_gui_stats", {}).values():
+        for k in tot:
+            tot[k] += v["sat"][k]
+    return tot
+
+
 def public_payload(pid, session, engine):
     state = engine.public_state()
     puzzle = Puzzle.from_dict(engine.full_puzzle)
@@ -55,7 +82,8 @@ def public_payload(pid, session, engine):
     return {"id": pid, "session": session, "size": state.size, "characters": cells, "clues": clues,
             "initial_revealed": list(engine._puzzle["initial_revealed"]),
             "revealed": state.proved,
-            "steps": len(state.proved) - len(engine._puzzle["initial_revealed"])}
+            "steps": len(state.proved) - len(engine._puzzle["initial_revealed"]),
+            "stats": {**_stats(engine), "total": _total(engine)}}
 
 
 class Handler(SimpleHTTPRequestHandler):
@@ -112,18 +140,18 @@ class Handler(SimpleHTTPRequestHandler):
         session=body.get("session", "")
         if session not in games: return self.send_json({"error":"Game session expired. Restart the puzzle."},404)
         engine=games[session]
-        if path == "/api/reset": engine.restart(); engine.submissions=0
+        if path == "/api/reset": engine.restart(); engine.submissions=0; engine.__dict__.pop("_gui_stats", None)
         elif path == "/api/call":
-            result=engine.submit_verdict(body["cell"],body["verdict"])
+            checked=_stats(engine); result=engine.submit_verdict(body["cell"],body["verdict"])
             if result.status != ACCEPTED:
-                response={"status":result.status,"message":result.message}
+                response={"status":result.status,"message":result.message,"checked":checked}
                 if result.status == "NOT_PROVABLE":
                     cls=LogicAgent(engine).classify()
                     response["forced"]={c:cls.verdicts[c].value for c in cls.forced}
                 response["state"]=public_payload(pid,session,engine)
                 return self.send_json(response)
             response=public_payload(pid,session,engine)
-            response["status"]=ACCEPTED
+            response["status"]=ACCEPTED; response["checked"]=checked
             return self.send_json(response)
         elif path in ("/api/hint","/api/step"):
             agent=LogicAgent(engine); hint=agent.hint()
@@ -131,8 +159,8 @@ class Handler(SimpleHTTPRequestHandler):
             if path=="/api/hint":
                 state=engine.public_state(); clues,_facts=explain(state,hint.cell,hint.verdict)
                 return self.send_json({"status":"HINT","cell":hint.cell,"verdict":hint.verdict,"clues":clues,"message":hint.message})
-            result=engine.submit_verdict(hint.cell,hint.verdict)
-            return self.send_json({"status":result.status,"cell":hint.cell,"verdict":hint.verdict})
+            checked=_stats(engine); result=engine.submit_verdict(hint.cell,hint.verdict)
+            return self.send_json({"status":result.status,"cell":hint.cell,"verdict":hint.verdict,"checked":checked})
         return self.send_json(public_payload(pid,session,engine))
 
 

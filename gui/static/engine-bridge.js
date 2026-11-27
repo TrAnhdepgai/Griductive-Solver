@@ -39,7 +39,7 @@ draw = function (flipped) {
     card.setAttribute("aria-label", `${c} ${nm(c)}, ${L[rev[c]]}. ${note.textContent}`);
   });
   const stats = $("#stats");
-  if (stats) stats.innerHTML = `<span>Bước engine: <b>${steps}</b></span><span>Đã lật: <b>${Object.keys(rev).length}/${cells.length}</b></span>`;
+  if (stats) renderStats();
   if (flipped) requestAnimationFrame(() => {
     const face = document.querySelector(`#board .cell[data-c="${flipped}"] .face`);
     if (face) {
@@ -123,6 +123,45 @@ document.addEventListener("click", e => { if (!e.composedPath().some(n => n.id =
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeCluePop(); });
 $("#clue").closest(".card").hidden = true;
 $(".side").append($("#toast"));
+// ---- Thống kê KB / CNF / SAT (số liệu thật từ backend) ----
+(() => {
+  const st = document.createElement("style");
+  st.textContent = `
+    #stats{display:block}
+    #stats .st-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:8px}
+    #stats .st{background:var(--cream);border:3px solid var(--ink);border-radius:14px;padding:4px 6px;text-align:center;cursor:help}
+    #stats .st b{display:block;font:400 22px/1.2 OldStyle}
+    #stats .st span{display:block;font-size:12px;opacity:.85;line-height:1.2}
+    #stats .st-sec{font:14px OldStyle;letter-spacing:1px;margin:12px 0 5px;opacity:.75;text-transform:uppercase}`;
+  document.head.appendChild(st);
+})();
+function fmtChecked(ch) {
+  if (!ch) return "";
+  return ` · KB ${ch.kb.primary_vars}+${ch.kb.aux_vars} biến, ${ch.kb.clauses} clause · ${ch.sat.calls} SAT, ${ch.sat.decisions} decisions`;
+}
+function renderStats() {
+  const el = $("#stats"); if (!el) return;
+  const s = P && P.stats, box = (v, l, tip) => `<div class="st" title="${tip}"><b>${v}</b><span>${l}</span></div>`;
+  let h = `<div class="st-row">${box(steps, "bước engine", "Số verdict đã được chấp nhận")}${box(Object.keys(rev).length + "/" + cells.length, "đã lật", "Số thẻ đã lật / tổng số thẻ")}${box(s ? s.forced : "–", "ô ép được", "Số ô chưa lật mà KB hiện tại chứng minh được")}</div>`;
+  if (s) {
+    h += `<div class="st-sec">Knowledge Base KB<sub>t</sub> (CNF)</div><div class="st-row">`
+      + box(s.kb.primary_vars, "biến chính", "Biến C_i: mỗi nhân vật một biến")
+      + box(s.kb.aux_vars, "biến phụ", "Biến phụ do bộ mã hóa thêm vào")
+      + box(s.kb.clauses, "clause", "Số mệnh đề CNF của KB hiện tại (clue đã lật + verdict đã chứng minh)") + `</div>`
+      + `<div class="st-sec">DPLL · phân loại trạng thái hiện tại</div><div class="st-row">`
+      + box(s.sat.calls, "lần gọi SAT", "Số truy vấn KB ∧ ¬C_i / KB ∧ C_i để xếp loại các ô chưa lật")
+      + box(s.sat.decisions, "decisions", "Số lần DPLL phải rẽ nhánh")
+      + box(s.sat.propagations, "propagations", "Số literal suy ra bằng unit propagation")
+      + box(s.sat.backtracks, "backtracks", "Số lần quay lui")
+      + box(s.sat.ms + " ms", "thời gian", "Thời gian giải SAT cho trạng thái này") + `</div>`
+      + `<div class="st-sec">Tổng cả ván</div><div class="st-row">`
+      + box(s.total.calls, "lần gọi SAT", "Cộng dồn qua mọi trạng thái đã đi qua")
+      + box(s.total.decisions, "decisions", "Cộng dồn")
+      + box(s.total.propagations, "propagations", "Cộng dồn")
+      + box(s.total.backtracks, "backtracks", "Cộng dồn") + `</div>`;
+  }
+  el.innerHTML = h;
+}
 function acceptEngineState(p, explicitFlip = null) {
   const newSession = gameSession !== p.session;
   if (!curDate) { curDate = today(); viewMon = monday(curDate); }
@@ -183,13 +222,13 @@ call = async function (c, v) {
       }
       const forced = Object.entries(out.forced || {}).map(([cell, status]) => `${cell}: ${L[status]}`).join(", ");
       const msg = out.status === "CONTRADICTED" ? "Engine đã chứng minh trạng thái ngược lại" : out.status === "NOT_PROVABLE" ? `Chưa đủ căn cứ cho ${c}.${forced ? ` Engine đang suy ra: ${forced}.` : " Hãy bấm Gợi ý để xem kết luận có thể chứng minh."}` : `${out.status}: ${out.message || "Nước đi không hợp lệ."}`;
-      toast(msg, "warn"); return;
+      log(`${c} ${nm(c)}: ${out.status}${fmtChecked(out.checked)}`); toast(msg, "warn"); return;
     }
-    const p = await api(`/api/state?id=${encodeURIComponent(P.id)}&session=${encodeURIComponent(gameSession)}`); acceptEngineState(p, c); log(`${c} ${nm(c)}: ${L[v]} (engine SAT)`); toast(solved ? doneMsg() : `Đúng rồi, ${nm(c)} là ${L[v].toLowerCase()}`, "ok");
+    const p = await api(`/api/state?id=${encodeURIComponent(P.id)}&session=${encodeURIComponent(gameSession)}`); acceptEngineState(p, c); log(`${c} ${nm(c)}: ${L[v]} (engine SAT${fmtChecked(out.checked)})`); toast(solved ? doneMsg() : `Đúng rồi, ${nm(c)} là ${L[v].toLowerCase()}`, "ok");
   } catch (e) { toast(e.message, "bad"); } finally { submittingVerdict = false; $("#call").querySelectorAll("button").forEach(b => b.disabled = false); }
 };
 $("#bHint").onclick = async () => { if (busy || paused || solved) return; try { const h = await api("/api/hint", { id: P.id, session: gameSession }); if (h.status !== "HINT") return toast(h.message, "warn"); hintCell = h.cell; assisted = true; makeHintColorGroups(h.clues || []); hl = (h.clues || []).flatMap(c => P.clues[c] ? clueCells(P.clues[c]) : []); draw(); showHintSummary(h); } catch (e) { toast(e.message, "bad"); } };
-async function stepOnce() { try { const r = await api("/api/step", { id: P.id, session: gameSession }); if (r.status !== "ACCEPTED") { toast(r.status === "STUCK" ? r.message : r.status, "warn"); return false; } const p = await api(`/api/state?id=${encodeURIComponent(P.id)}&session=${encodeURIComponent(gameSession)}`); acceptEngineState(p, r.cell); log(`${r.cell} ${nm(r.cell)}: ${L[r.verdict]} (agent SAT)`); return !solved; } catch (e) { toast(e.message, "bad"); return false; } }
+async function stepOnce() { try { const r = await api("/api/step", { id: P.id, session: gameSession }); if (r.status !== "ACCEPTED") { toast(r.status === "STUCK" ? r.message : r.status, "warn"); return false; } const p = await api(`/api/state?id=${encodeURIComponent(P.id)}&session=${encodeURIComponent(gameSession)}`); acceptEngineState(p, r.cell); log(`${r.cell} ${nm(r.cell)}: ${L[r.verdict]} (agent SAT${fmtChecked(r.checked)})`); return !solved; } catch (e) { toast(e.message, "bad"); return false; } }
 $("#bStep").onclick = () => { if (!busy && !paused && !solved) { assisted = true; stepOnce(); } };
 $("#bAuto").onclick = async () => { if (busy) { busy = false; return; } if (solved || paused) return; assisted = true; lock(true); while (busy && await stepOnce()) await sleep(1400 / +$("#speed").value); lock(false); };
 $("#bRestart").onclick = async () => { if (busy) return; try { const p = await api("/api/reset", { id: P.id, session: gameSession }); elapsed = 0; last = performance.now(); renderClock(); acceptEngineState(p); } catch (e) { toast(e.message, "bad"); } };
