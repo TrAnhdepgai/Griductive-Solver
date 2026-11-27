@@ -137,6 +137,22 @@ class Handler(SimpleHTTPRequestHandler):
             payload=public_payload(pid,session,games[session])
             payload["date"]=games[session].full_puzzle.get("date"); payload["difficulty"]=games[session].full_puzzle.get("difficulty")
             return self.send_json(payload)
+
+        elif path == "/api/upload":
+            raw_puzzle = body.get("puzzle")
+            if not isinstance(raw_puzzle, dict):
+                return self.send_json({"error": "Dữ liệu file JSON không hợp lệ."}, 400)
+            try:
+                # Validate cấu trúc puzzle qua model Puzzle trước khi nạp vào engine
+                parsed = Puzzle.from_dict(raw_puzzle)
+                pid = parsed.id or "custom_puzzle"
+                session = uuid.uuid4().hex
+                games[session] = LocalGameEngine(raw_puzzle) if hasattr(LocalGameEngine, "__init__") and not isinstance(raw_puzzle, str) else LocalGameEngine.from_dict(raw_puzzle)
+                payload = public_payload(pid, session, games[session])
+                payload["difficulty"] = raw_puzzle.get("difficulty", "custom")
+                return self.send_json(payload)
+            except Exception as e:
+                return self.send_json({"error": f"Lỗi đọc puzzle: {e}"}, 400)
         session=body.get("session", "")
         if session not in games: return self.send_json({"error":"Game session expired. Restart the puzzle."},404)
         engine=games[session]

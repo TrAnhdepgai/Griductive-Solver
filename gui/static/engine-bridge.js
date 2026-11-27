@@ -232,5 +232,101 @@ async function stepOnce() { try { const r = await api("/api/step", { id: P.id, s
 $("#bStep").onclick = () => { if (!busy && !paused && !solved) { assisted = true; stepOnce(); } };
 $("#bAuto").onclick = async () => { if (busy) { busy = false; return; } if (solved || paused) return; assisted = true; lock(true); while (busy && await stepOnce()) await sleep(1400 / +$("#speed").value); lock(false); };
 $("#bRestart").onclick = async () => { if (busy) return; try { const p = await api("/api/reset", { id: P.id, session: gameSession }); elapsed = 0; last = performance.now(); renderClock(); acceptEngineState(p); } catch (e) { toast(e.message, "bad"); } };
-$("#file").disabled = true; $("#bLoad").disabled = true;
-api("/api/puzzles").then(async items => { enginePuzzleIds = items; try { dailyInfo = await api("/api/daily"); } catch (_) { dailyInfo = null; } return selectDate(today()); }).catch(e => toast(e.message, "bad"));
+// ---- Kích hoạt nút Load: hỗ trợ cả Upload file JSON từ máy & chọn nhanh từ danh sách puzzles/ ----
+const fileInput = $("#file");
+const loadBtn = $("#bLoad");
+
+if (fileInput) {
+  fileInput.disabled = false;
+  fileInput.accept = ".json,application/json";
+  fileInput.onchange = async (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    try {
+      const text = await f.text();
+      const puzzleObj = JSON.parse(text);
+      const p = await api("/api/upload", { puzzle: puzzleObj });
+      acceptEngineState(p);
+      $("#dayinfo").textContent = `${p.id} · ${p.size}×${p.size} (${puzzleObj.difficulty || "custom"})`;
+      toast(`Đã tải thành công: ${f.name}`, "ok");
+    } catch (err) {
+      toast("Không thể tải file puzzle: " + err.message, "bad");
+    } finally {
+      fileInput.value = ""; // Reset để có thể chọn lại cùng 1 file nếu muốn
+    }
+  };
+}
+
+if (loadBtn) {
+  loadBtn.disabled = false;
+  loadBtn.onclick = () => {
+    // Mở hộp thoại chọn file JSON từ máy tính
+    if (fileInput) fileInput.click();
+  };
+}
+
+// Tạo thêm dropdown chọn nhanh các màn chơi mẫu có sẵn trong thư mục puzzles/ (3x3, 4x4, 5x5)
+function renderPresetSelector(items) {
+  if (!items || !items.length || document.getElementById("presetWrap")) return;
+  const presets = items.filter(item => !/^daily_/i.test(item.id) && !/daily/i.test(item.file || ""));
+  const list = presets.length ? presets : items;
+
+  const wrap = document.createElement("div");
+  wrap.id = "presetWrap";
+  wrap.style.cssText = "position:relative;display:inline-block;";
+
+  const trigger = document.createElement("button");
+  trigger.type = "button";
+  trigger.className = "btn";
+  trigger.textContent = "📂 Chọn màn mẫu ▾";
+  trigger.title = "Chọn nhanh puzzle mẫu từ thư mục puzzles/";
+
+  const menu = document.createElement("div");
+  menu.style.cssText = `
+    display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:999;
+    min-width:100%;max-height:280px;overflow-y:auto;
+    background:var(--cream,#fff);color:var(--ink,#222);
+    border:3px solid var(--ink,#222);border-radius:14px;
+    box-shadow:0 6px 0 var(--ink,#222);padding:4px;
+  `;
+
+  list.forEach(item => {
+    const row = document.createElement("div");
+    row.textContent = `${item.id} (${item.size}×${item.size} - ${item.difficulty || "?"})`;
+    row.style.cssText = "padding:6px 12px;border-radius:9px;cursor:pointer;white-space:nowrap;font-size:14px;";
+    row.onmouseenter = () => { row.style.background = "rgba(0,0,0,0.08)"; };
+    row.onmouseleave = () => { row.style.background = "transparent"; };
+    row.onclick = async () => {
+      menu.style.display = "none";
+      if (busy) return;
+      trigger.textContent = `📂 ${item.id} ▾`;
+      try {
+        const p = await api("/api/start", { id: item.id });
+        acceptEngineState(p);
+        $("#dayinfo").textContent = `${p.id} · ${p.size}×${p.size}`;
+        toast(`Đã nạp màn: ${p.id}`, "ok");
+      } catch (err) {
+        toast(err.message, "bad");
+      }
+    };
+    menu.append(row);
+  });
+
+  trigger.onclick = (e) => {
+    e.stopPropagation();
+    menu.style.display = menu.style.display === "none" ? "block" : "none";
+  };
+  document.addEventListener("click", () => { menu.style.display = "none"; });
+
+  wrap.append(trigger, menu);
+  if (loadBtn && loadBtn.parentElement) {
+    loadBtn.parentElement.insertBefore(wrap, loadBtn);
+  }
+}
+
+api("/api/puzzles").then(async items => {
+  enginePuzzleIds = items;
+  renderPresetSelector(items);
+  try { dailyInfo = await api("/api/daily"); } catch (_) { dailyInfo = null; }
+  return selectDate(today());
+}).catch(e => toast(e.message, "bad"));
