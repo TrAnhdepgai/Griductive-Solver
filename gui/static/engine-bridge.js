@@ -162,6 +162,19 @@ function renderStats() {
   }
   el.innerHTML = h;
 }
+// Cell notes ("lời khai hết giá trị", nghi vô tội / có tội) belong to ONE puzzle. Cells are named the
+// same in every puzzle (A1, B2...), so they are stored per puzzle id and swapped in when a new game starts.
+const NOTES_KEY = "griductive.notes.v1";
+let notesByPuzzle = {};
+try { notesByPuzzle = JSON.parse(localStorage.getItem(NOTES_KEY) || "{}") || {}; } catch (_) { notesByPuzzle = {}; }
+const notesKey = p => (p && p.id) || "custom";
+function persistNotes() {
+  const k = notesKey(P);
+  if (Object.keys(notes).length) notesByPuzzle[k] = { ...notes }; else delete notesByPuzzle[k];
+  try { localStorage.setItem(NOTES_KEY, JSON.stringify(notesByPuzzle)); } catch (_) { }
+}
+const saveBase = save;
+save = function () { saveBase(); persistNotes(); };
 function acceptEngineState(p, explicitFlip = null) {
   const newSession = gameSession !== p.session;
   if (!curDate) { curDate = today(); viewMon = monday(curDate); }
@@ -169,7 +182,7 @@ function acceptEngineState(p, explicitFlip = null) {
   const newlyFlipped = sameSession ? Object.keys(p.revealed || {}).find(c => !rev[c]) : null;
   const flipped = explicitFlip || newlyFlipped;
   P = p; gameSession = p.session; N = p.size; cells = Object.keys(p.characters); rev = { ...p.revealed };
-  if (newSession) { elapsed = 0; last = performance.now(); renderClock(); }
+  if (newSession) { elapsed = 0; last = performance.now(); renderClock(); notes = { ...(notesByPuzzle[notesKey(p)] || {}) }; }
   P.initial_revealed = Object.keys(rev); solved = Object.keys(rev).length === cells.length;
   steps = p.steps || 0; sat = 0; sel = null; hl = flipped && P.clues[flipped] ? clueCells(P.clues[flipped]) : []; hintCell = null; hintScopes = []; hintColorGroups = { first: new Set(), second: new Set(), people: new Set() };
   if (flipped && P.clues[flipped]) $("#clue").innerHTML = `<b>Manh mối mới của ${nm(flipped)}:</b> ${clueText(P.clues[flipped])}`;
@@ -231,7 +244,7 @@ $("#bHint").onclick = async () => { if (busy || paused || solved) return; try { 
 async function stepOnce() { try { const r = await api("/api/step", { id: P.id, session: gameSession }); if (r.status !== "ACCEPTED") { toast(r.status === "STUCK" ? r.message : r.status, "warn"); return false; } const p = await api(`/api/state?id=${encodeURIComponent(P.id)}&session=${encodeURIComponent(gameSession)}`); acceptEngineState(p, r.cell); log(`${r.cell} ${nm(r.cell)}: ${L[r.verdict]} (agent SAT${fmtChecked(r.checked)})`); return !solved; } catch (e) { toast(e.message, "bad"); return false; } }
 $("#bStep").onclick = () => { if (!busy && !paused && !solved) { assisted = true; stepOnce(); } };
 $("#bAuto").onclick = async () => { if (busy) { busy = false; return; } if (solved || paused) return; assisted = true; lock(true); while (busy && await stepOnce()) await sleep(1400 / +$("#speed").value); lock(false); };
-$("#bRestart").onclick = async () => { if (busy) return; try { const p = await api("/api/reset", { id: P.id, session: gameSession }); elapsed = 0; last = performance.now(); renderClock(); acceptEngineState(p); } catch (e) { toast(e.message, "bad"); } };
+$("#bRestart").onclick = async () => { if (busy) return; try { const p = await api("/api/reset", { id: P.id, session: gameSession }); elapsed = 0; last = performance.now(); renderClock(); notes = {}; persistNotes(); acceptEngineState(p); } catch (e) { toast(e.message, "bad"); } };
 // ---- Kích hoạt nút Load: hỗ trợ cả Upload file JSON từ máy & chọn nhanh từ danh sách puzzles/ ----
 const fileInput = $("#file");
 const loadBtn = $("#bLoad");
