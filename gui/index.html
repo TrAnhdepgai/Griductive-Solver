@@ -1596,7 +1596,7 @@
     const doneMsg = () => `Phá án xong trong ${fmt(elapsed)}!${assisted ? " (có dùng trợ giúp)" : ""}`;
     function save() {
       if (custom) return; const r = {}; Object.keys(rev).forEach(c => { if (!P.initial_revealed.includes(c)) r[c] = rev[c] });
-      store.days[key()] = { rev: r, notes, elapsed: Math.floor(elapsed), solved, assisted, steps }; persist()
+      store.days[key()] = { rev: r, notes: { ...notes }, elapsed: Math.floor(elapsed), solved, assisted, steps }; persist()
     }
     function buzz(p) { if (S.haptics && navigator.vibrate) try { navigator.vibrate(p) } catch (e) { } }
     function renderClock() { const t = S.showTime ? fmt(elapsed) : "••:••"; if ($("#clk").textContent != t) $("#clk").textContent = t }
@@ -1674,7 +1674,7 @@
     }
     applySettings();
   </script>
-  <script src="static/engine-bridge.js?v=23"></script>
+  <script src="static/engine-bridge.js?v=24"></script>
 </body>
 
 </html>
